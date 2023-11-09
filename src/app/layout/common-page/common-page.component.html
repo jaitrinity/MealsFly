@@ -1,0 +1,441 @@
+<div class="row">
+    <div class="col-md-2">
+    
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-borderd table-striped my-table">
+            <thead>
+                <tr>
+                    <th>Priority</th>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Address</th>
+                    <!-- <th>Approve</th> -->
+                    <th>Action</th>
+                    <th>Image</th>
+                    <th>Banner</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{restData.displayOrder}}</td>
+                    <td>{{restData.name}}</td>
+                    <td>{{restData.mobile}}</td>
+                    <td>{{restData.address}} 
+                        <a *ngIf="isTrue(restData.address)" href="https://www.google.co.in/maps/search/{{restData.latLong}}" target="_blank">
+                            <i class="fa fa-map-marker" title="View location on map" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                    <!-- <td>
+                        <div *ngIf="restData.approve == 0;">
+                            <label (click)="appRejRestaurant(restData.restId, 1, 'Approve')"title="Approve">
+                                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                            </label> &nbsp;
+                            <label (click)="appRejRestaurant(restData.restId, 2, 'Reject')" title="Reject">
+                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                            </label>
+                        </div>
+                        <div *ngIf="restData.approve == 1;">
+                            <label (click)="appRejRestaurant(restData.restId, 2, 'Reject')" title="Reject">
+                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                            </label>
+                        </div>
+                        <div *ngIf="restData.approve == 2;">
+                            <label (click)="appRejRestaurant(restData.restId, 1, 'Approve')" title="Approve">
+                                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                            </label>
+                        </div>
+                    </td> -->
+                    <td>
+                        <label (click)="editViewRestData()" title="Edit">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </label> &nbsp;
+                        <span *ngIf="restData.approve == 1">
+                            <span *ngIf="restData.enable == 0 || restData.enable == 2">
+                                <label (click)="enaDisRestaurant(restData.restId, 1, 'Enable')" title="Enable">
+                                    <i class="fa fa-toggle-on" aria-hidden="true"></i>
+                                </label>
+                            </span>
+                            &nbsp;
+                            <span *ngIf="restData.enable == 1;">
+                                <label (click)="enaDisRestaurant(restData.restId, 2, 'Disable')" title="Disable">
+                                    <i class="fa fa-toggle-off" aria-hidden="true"></i>
+                                </label>
+                            </span>
+                        </span>
+                    </td>
+                    <td>
+                        <label *ngIf="isTrue(restData.image)" (click)="viewImage(restData.image)">
+                            <img [src]="restData.image" class="img-thumbnail"/>
+                        </label>
+                    </td>
+                    <td>
+                        <label *ngIf="isTrue(restData.banner)" (click)="viewImage(restData.banner)">
+                            <img [src]="restData.banner" class="img-thumbnail"/>
+                        </label>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row" style="margin-bottom: 2px;">
+    <div class="col-md-8">
+        <span class="text-mealsfly" style="font-size: 1.3rem; font-weight: 400; border-bottom: 1px solid;">Item List</span>
+    </div>
+    <div class="col-md-4" style="text-align: right;">
+        <button class="btn btn-sm btn-info text-white" (click)="addCatItem()">Add Item</button>
+        &nbsp; 
+        <button class="btn btn-sm btn-danger" (click)="exportItem()" 
+            *ngIf="searchItemList.length != 0">
+            Export Item
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-borderd table-striped my-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Unit</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th>
+                        <input type="text" class="form-control" placeholder="Name" [(ngModel)]="searchItemName"
+                        (keyup)="searchItem($event)"/>
+                    </th>
+                    <th>
+                        <input type="text" class="form-control" placeholder="Category" [(ngModel)]="searchCategory"
+                        (keyup)="searchItem($event)"/>
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let items of searchItemList; let rowIndex = index" class="table-row data-{{rowIndex+1}}">
+                    <td>
+                        {{items.itemName}}
+                        &nbsp; <i class="fa fa-trash" aria-hidden="true" title="Delete this item" (click)="deleteItem(items.itemId)"></i>
+                        &nbsp; <i class="fa fa-pencil" aria-hidden="true" title="Edit this item" (click)="editItem(items)"></i>
+                    </td>
+                    <td>{{items.catName}}</td>
+                    <td>
+                        <div *ngFor="let units of items.itemUnitList">
+                            <span *ngIf="units.price !=''">
+                                {{units.unit}} : 
+                                <i class="fa fa-inr" aria-hidden="true"></i> {{units.price}}
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <label *ngIf="items.itemImage != ''" (click)="viewImage(items.itemImage)">
+                            <img [src]="items.itemImage" class="img-thumbnail"/>
+                        </label>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<app-pagination *ngIf="searchItemList.length !=0" 
+    [itemCount]="searchItemList.length" 
+    [perPageRecord]="5" 
+    [showPage]="10">
+</app-pagination>
+<div class="row" *ngIf="noItemFound">
+    <div class="col-md-12">
+        <h4 class="text-warning text-center">
+            <i class="fa fa-info-circle"></i> &nbsp;
+            <i>No item found of <span class="_restName">{{restData.name}}</span>...</i>
+        </h4>
+    </div>
+</div>
+<div class="row" *ngIf="isItemLoaded">
+    <div class="col-md-12">
+        <h4 class="text-warning text-center">
+            <i class="fa fa-cog fa-spin"></i> &nbsp;
+            <i>Please wait while loading <span class="_restName">{{restData.name}}</span> items...</i>
+        </h4>
+    </div>
+</div>
+
+<div id="editItemModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-md" >
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 10px !important;">
+				<h5 class="modal-title">Item {{editItemId}}</h5>
+				<button class="btn btn-sm btn-danger" (click)="closeAnyModal('editItemModal')">Cancel</button>
+			</div>
+			<div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="text-warning">! {{imgInfo}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Category</label>
+                        <select class="form-control" [(ngModel)]="editCatId">
+                            <option value="">Select</option>
+                            <option *ngFor="let cat of categoryList" [value]="cat.catId">{{cat.catName}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label>Name</label>
+                        <input type="text" [(ngModel)]="editItemName" class="form-control"/>
+                    </div>
+                    <div class="col-md-12">
+                        <label>Image</label>
+                        <input type="file" id="editItemImageBase64" (change)="changeListener($event, 'editItemImage')" accept=".jpg,.jpeg,.png" class="form-control resetField" />
+                        <input type="hidden" [(ngModel)]="editItemImageBase64" class="resetField"/>
+                    </div>
+                    <div class="col-md-12">
+                        <label>Unit</label>
+                        <select class="form-control" [(ngModel)]="editCustomize" (change)="showEditUnit()">
+                            <option value="">Select</option>
+                            <option *ngFor="let ul of unitList" [value]="ul.custId">{{ul.custVal}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row" *ngIf="isOriginal">
+                            <div class="col-md-4" *ngFor="let su of editItemUnitList">
+                                <label><i class="fa fa-inr" aria-hidden="true"></i> {{su.unit}}</label>
+                                <input type="text" [value]="su.price" id="editUnit_{{su.itemUnitId}}" class="form-control" [OnlyNumberWithDecimal]="true"/>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="!isOriginal">
+                            <div class="col-md-4" *ngFor="let su of showEditUnit()">
+                                <label><i class="fa fa-inr" aria-hidden="true"></i> {{su}}</label>
+                                <input type="text" id="editUnit_{{su}}" class="form-control resetField" [OnlyNumberWithDecimal]="true"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label style="display: block;color: transparent;">0</label>
+                        <button class="btn btn-sm btn-success" (click)="saveItem()">Save</button>
+                    </div>
+                </div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>	
+	</div>
+</div>
+
+<div id="editRestModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-md" >
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 10px !important;">
+				<h5 class="modal-title"></h5>
+				<button class="btn btn-sm btn-danger" (click)="closeAnyModal('editRestModal')">Close</button>
+			</div>
+			<div class="modal-body">
+                <!-- <div class="row">
+                    <div class="col-md-6">
+                        <label>Priority * &nbsp; <i title="Minimum priority is display on top" class="fa fa-info-circle" aria-hidden="true"></i></label>
+                        <input type="text" class="form-control resetField" [(ngModel)]="restDisplayOrder" [OnlyNumber]="true" [disabled]="true"/>
+                    </div>
+                </div> -->
+                <div class="row">
+                    <div class="col-md-6">
+                      <label>Name *</label>
+                      <input type="text" class="form-control resetField" [(ngModel)]="restName"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Mobile *</label>
+                        <input type="text" class="form-control resetField" [(ngModel)]="restMobile" [OnlyNumber]="true" maxlength="10"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Address</label>
+                        <textarea rows="3" class="form-control resetField" style="resize: none;" [(ngModel)]="restAddress"></textarea>
+                        <!-- <input type="text" class="form-control resetField" [(ngModel)]="restAddress"/> -->
+                    </div>
+                    <div class="col-md-6">
+                        <label>Latlong *</label>
+                        <input type="text" class="form-control resetField" [(ngModel)]="restLatLong"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Image &nbsp; <i class="fa fa-info-circle" [title]="restImgInfo"></i></label>
+                        <input type="file" id="restImageBase64" (change)="changeListener($event, 'restImage')" accept=".jpg,.jpeg,.png" class="form-control resetField" />
+                        <input type="hidden" [(ngModel)]="restImageBase64" class="resetField"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Banner &nbsp; <i class="fa fa-info-circle" [title]="restBnrInfo"></i></label>
+                        <input type="file" id="restBannerBase64" (change)="changeListener($event, 'restBanner')" accept=".jpg,.jpeg,.png" class="form-control resetField" />
+                        <input type="hidden" [(ngModel)]="restBannerBase64" class="resetField"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="display: block;color: transparent;">0</label>
+                        <button class="btn btn-sm btn-info text-white" (click)="saveRestaurant()">Save</button>
+                    </div>
+                </div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>	
+	</div>
+</div>
+
+<div id="imageModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-md" >
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 10px !important;">
+				<h5 class="modal-title"></h5>
+				<button class="btn btn-sm btn-danger" (click)="closeAnyModal('imageModal')">Close</button>
+			</div>
+			<div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1">
+                      <button class="btn btn-sm btn-danger turn" title="Rotate image">
+                        <i class="fa fa-repeat" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="col-md-11" style="max-height: 505px !important;overflow: auto;">
+                      <img [src]="viewImgUrl" class="viewImg" width="400px" height="400px"/>
+                    </div>
+                </div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>	
+	</div>
+</div>
+
+<div id="addItemModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-xl" >
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 10px !important;">
+				<h5 class="modal-title"></h5>
+				<button class="btn btn-sm btn-danger" (click)="closeAnyModal('addItemModal');">Close</button>
+			</div>
+			<div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="text-warning">! {{imgInfo}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <Label>Category</Label> 
+                        &nbsp;<i class="fa fa-plus-circle" aria-hidden="true" (click)="addNewCategory()" title="Add new category"></i>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="categoryLabel" *ngFor="let cat of categoryList">
+                            <input type="checkbox" id="cat{{cat.catId}}" (change)="selectCategory(cat.catId,cat.catName)" />
+                            {{cat.catName}}
+                        </label>
+                    </div>
+                </div>
+                <div style="max-height: 300px; overflow: auto;">
+                    <div class="row" *ngFor="let item of createRange(addMore);">
+                        <div class="col-md-2">
+                            <label>Category *</label>
+                            <select class="form-control resetField" id="itemCategory{{item}}">
+                                <option value="">Select</option>
+                                <option *ngFor="let selCat of selectCateList" [value]="selCat.catId">{{selCat.catName}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Name *</label>
+                            <input type="text" class="form-control resetField" id="itemName{{item}}"/>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Image *</label>
+                            <input type="file" id="file_itemImage{{item}}" accept=".jpg,.jpeg,.png" (change)="changeListener($event, item)" class="form-control resetField" />
+                            <input type="hidden" id="txt_itemImage{{item}}" class="form-control resetField"/>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Unit *</label>
+                            <select class="form-control resetField" id="itemCustomize{{item}}" (change)="showUnit(item)">
+                                <option value="">Select</option>
+                                <option *ngFor="let ul of unitList" [value]="ul.custId">{{ul.custVal}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-4" *ngFor="let su of showUnit(item)">
+                                    <label><i class="fa fa-inr" aria-hidden="true"></i> {{su}}</label>
+                                    <input type="text" class="form-control resetField" id="item{{su}}{{item}}" [OnlyNumberWithDecimal]="true"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label style="display: block;color: transparent;">0</label>
+                        <button class="btn btn-sm btn-info text-white" (click)="addMoreItem()">
+                            <i class="fa fa-plus-circle" title="Add more item" aria-hidden="true" ></i>
+                        </button> &nbsp;
+                        <button *ngIf="addMore > 1" class="btn btn-sm btn-warning text-white" (click)="removeItem()">
+                            <i class="fa fa-minus-circle" title="remove last item" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <label style="display: block;color: transparent;">0</label>
+                        <button class="btn btn-sm btn-success" (click)="submitItem()">Submit</button>
+                    </div>
+                </div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>	
+	</div>
+</div>
+
+<div id="newCategoryModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-md" >
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 10px !important;">
+				<h5 class="modal-title"></h5>
+				<button class="btn btn-sm btn-danger" (click)="closeAndOpenModal('newCategoryModal','addItemModal')">Cancel</button>
+			</div>
+			<div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="text-warning">! {{imgInfo}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Category</label>
+                        <input type="text" class="form-control resetField" [(ngModel)]="newCatName"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Image</label>
+                        <input type="file" id="file_catImage" accept=".jpg,.jpeg,.png" (change)="changeListener($event,0)" class="form-control resetField" />
+                        <input type="hidden" [(ngModel)]="catImageBase64" class="form-control resetField"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label style="display: block;color: transparent;">0</label>
+                        <button class="btn btn-sm btn-success" (click)="submitCategory()">Submit</button>
+                    </div>
+                </div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>	
+	</div>
+</div>
+

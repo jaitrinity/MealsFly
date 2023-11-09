@@ -1,0 +1,25 @@
+<div class="parent">
+    <div class="row form-field">
+        <form #loginForm="ngForm" (ngSubmit)="login()">
+            <div class="col-md-12 text-center">
+                <img src="assets/img/mealsfly.png">
+            </div>
+            <br>
+            <div class="col-md-12">
+                <label class="text-mealsfly">Username</label>
+                <input type="text" [(ngModel)]="loginModel.username" placeholder="Username" required 
+                class="form-control" name="username"/>
+            </div>
+            <br>
+            <div class="col-md-12">
+                <label class="text-mealsfly">Password</label>
+                <input type="password" [(ngModel)]="loginModel.password" placeholder="Password" required 
+                class="form-control" name="password"/>
+            </div>
+            <br>
+            <div class="col-md-12">
+                <button class="btn btn-sm btn-default" [disabled]='loginForm.form.invalid' [class.activebutton]='!loginForm.form.invalid'>Login</button>
+            </div>
+        </form>
+    </div>
+</div>

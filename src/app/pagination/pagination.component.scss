@@ -1,0 +1,21 @@
+@import "../../mealsfly.scss";
+.allPages p{
+    float: inline-end;
+    display: none;
+}
+.allPages p:first-child{
+    display:block;
+}
+.my-pagination{
+    padding : 4px 6px;
+    background: $mealsFlyGreen;
+    color: white;
+    border: 0.5px solid white;
+    cursor: pointer;
+    font-size: larger;
+  }
+.pagination-active{
+    background: $mealsFlyRed;
+    color: white;
+    font-weight: bold;
+}
