@@ -18,12 +18,7 @@ export class CommonPageComponent implements OnInit {
   imgWidth: number = 0;
   imgHeight: number = 0; 
   imgInfo: string = "";
-  imgRatio = 0.26;
-  bnrRatio = 0.30;
-  restImgInfo: string = "Height = Width * "+this.imgRatio+";\n"+
-                        "Height = 500px * "+this.imgRatio+" = 130px";
-  restBnrInfo: string = "Height = Width * "+this.bnrRatio+";\n"+
-                        "Height = 500px * "+this.bnrRatio+" = 150px";
+  itemImgInfo: string = "Item width and height dimension must be equal";
   restDisplayOrder: number = 0;
   restId: any = "";
   restData: any = "";
@@ -31,6 +26,8 @@ export class CommonPageComponent implements OnInit {
   restMobile: any = "";
   restAddress: any = "";
   restLatLong: any = "";
+  restOpenTime: any = "";
+  restCloseTime: any = "";
   restImage: any = "";
   restBanner: any = "";
   itemList: any = [];
@@ -153,7 +150,6 @@ export class CommonPageComponent implements OnInit {
     this.editCatId = itemObj.catId;
     this.editItemName = itemObj.itemName;
     this.editCustomize = itemObj.customize;
-    // this.showEditUnit();
     this.editItemUnitList = itemObj.itemUnitList;
     this.openAnyModal("editItemModal");
   }
@@ -168,11 +164,6 @@ export class CommonPageComponent implements OnInit {
       this.selectCateList.push(catJson);
     }
     else{
-      // let indexOf = this.selectCateList.findIndex((object: { catId: any; }) =>{
-      //   return object.catId == catId;
-      // });
-      // this.selectCateList.splice(indexOf, 1);
-
       let newList = this.selectCateList.filter((object: { catId: any; }) =>{
         return object.catId !== catId;
       });
@@ -326,9 +317,7 @@ export class CommonPageComponent implements OnInit {
         let unit = unitList[j];
         let itemData = $("#item"+unit+""+id).val();
         if(itemData.trim() == ""){
-          // this.layout.warningSnackBar("enter "+unit+" of "+id);
-          // $("#item"+unit+""+id).focus();
-          // break;
+         
         }
         else{
           let unitJson = {
@@ -412,38 +401,10 @@ export class CommonPageComponent implements OnInit {
     })
   }
 
-  enaDisRestaurant(restId:any, action:any, actionTxt:any){
-    let isConfirm = confirm("Do you want to "+actionTxt+" this restaurant?");
-    if(!isConfirm){
-      return;
-    }
-    let jsonData = {
-      updateType: 'enaDisRest',
-      restId: restId,
-      action: action
-    }
-    this.sharedService.updateData(jsonData)
-    .pipe(take(1)).subscribe({
-      next: result=>{
-        if(result.code == Constant.SUCCESSFUL_STATUS_CODE){
-          this.actionOnRestaurant();
-          this.layout.successSnackBar(result.message)
-        }
-        else{
-          this.layout.warningSnackBar(result.message)
-        }
-      },
-      error: _=>{
-        this.layout.errorSnackBar(Constant.returnServerErrorMessage("enaDisRest"))
-      }
-    })
-  }
-
   resetItemList(){
     this.itemList = [];
     this.searchItemList = [];
     this.isItemLoaded = true;
-    this.noItemFound = false;
     let jsonData = {
       searchType: "resetItemList",
       restId: this.restId
@@ -453,10 +414,8 @@ export class CommonPageComponent implements OnInit {
       next: result=>{
         this.itemList = result;
         this.searchItemList = this.itemList;
-        if(this.itemList == 0){
-          this.noItemFound = true;
-        }
         this.isItemLoaded = false;
+        this.searchItem("");
       },
       error: _=>{
         this.layout.errorSnackBar(Constant.returnServerErrorMessage("resetItemList"))
@@ -478,7 +437,15 @@ export class CommonPageComponent implements OnInit {
       return false;
     }
     else if(this.restLatLong.trim() == ""){
-      this.layout.warningSnackBar("Latlong should be fill")
+      this.layout.warningSnackBar("Latlong should be fill");
+      return false;
+    }
+    else if(this.restCloseTime.trim() != "" && this.restOpenTime.trim() == ""){
+      this.layout.warningSnackBar("Please select open time");
+      return false;
+    }
+    else if(!this.checkCloseTime()){
+      return false;
     }
     return true;
   }
@@ -496,6 +463,8 @@ export class CommonPageComponent implements OnInit {
       latlong: this.restLatLong,
       image64:this.restImageBase64,
       banner64:this.restBannerBase64,
+      openTime:this.restOpenTime,
+      closeTime:this.restCloseTime,
       displayOrder: this.restDisplayOrder
     }
     this.sharedService.updateData(jsonData)
@@ -503,7 +472,6 @@ export class CommonPageComponent implements OnInit {
       next: result=>{
         if(result.code == Constant.SUCCESSFUL_STATUS_CODE){
           this.layout.successSnackBar(result.message);
-          // $(".resetField").val("");
           this.closeAnyModal("editRestModal");
           this.actionOnRestaurant();
         }
@@ -527,6 +495,7 @@ export class CommonPageComponent implements OnInit {
       this.checkImageDimensions(selectedFile,imageId);
     }
   }
+
   checkImageDimensions(file: File, imageId:any) {
     const reader = new FileReader();
 
@@ -536,100 +505,49 @@ export class CommonPageComponent implements OnInit {
 
       img.onload = () => {
         const width = img.width;
-        let aspectHeight = width;
-        let alertMsg = "";
-        if(imageId == "restImage"){
-          aspectHeight = Math.floor(width * this.imgRatio);
-          alertMsg = 'Image dimensions must equal to ('+width+'x'+aspectHeight+')px.';
-        }
-        else if(imageId == "restBanner"){
-          aspectHeight = Math.floor(width * this.bnrRatio);
-          alertMsg = 'Banner dimensions must equal to ('+width+'x'+aspectHeight+')px.';
-        }
-        else if(imageId == "editItemImage"){
-          alertMsg = 'Image dimensions must equal to ('+width+'x'+aspectHeight+')px.';
-        }
-        else{
-          alertMsg = 'Image dimensions must equal to ('+width+'x'+aspectHeight+')px.';
-        }
         const height = img.height;
-        if (height != aspectHeight) {
+
+        if((imageId == 0 || imageId == "restImage" || imageId == "restBanner") && 
+        (width != this.imgWidth || height != this.imgHeight)
+        ){
+          let type = "";
           if(imageId == 0){
             this.catImageBase64 = "";
             $("#file_catImage").val("");
+            type = "Category img ";
           }
           else if(imageId == "restImage"){
             this.restImageBase64 = "";
             $("#restImageBase64").val("");
+            type = "Restaurant img ";
           }
           else if(imageId == "restBanner"){
             this.restBannerBase64 = "";
             $("#restBannerBase64").val("");
+            type = "Restaurant banner ";
           }
-          else if(imageId == "editItemImage"){
+          alert(type+'dimensions must be equal to ('+this.imgWidth+'x'+this.imgHeight+')px.');
+        }
+        else if(imageId > 0 && width != height){
+          if(imageId == "editItemImage"){
             this.editItemImageBase64 = "";
             $("#editItemImageBase64").val("");
           }
           else{
             $("#file_itemImage"+imageId).val("");
             $("#txt_itemImage"+imageId).val("");
-          }
-          alert(alertMsg);
-        } else {
-          // You can proceed with the image upload here
-          // alert('Image dimensions are valid.');
-          // Example: call a function to upload the image.
+          } 
+          alert('Width('+width+') and Height('+height+') dimensions must be equal');
+        }
+        else{
           this.uploadImage(file,imageId);
         }
       };
     };
-
     reader.readAsDataURL(file);
   }
-  // checkImageDimensions(file: File, imageId:any) {
-  //   const reader = new FileReader();
 
-  //   reader.onload = (e: any) => {
-  //     const img = new Image();
-  //     img.src = e.target.result;
-
-  //     img.onload = () => {
-  //       const width = img.width;
-  //       const height = img.height;
-
-  //       if (width > this.imgWidth || height > this.imgHeight) {
-  //         if(imageId == 0){
-  //           this.catImageBase64 = "";
-  //           $("#file_catImage").val("");
-  //         }
-  //         else if(imageId == "restImage"){
-  //           this.restImageBase64 = "";
-  //           $("#restImageBase64").val("");
-  //         }
-  //         else if(imageId == "restBanner"){
-  //           this.restBannerBase64 = "";
-  //           $("#restBannerBase64").val("");
-  //         }
-  //         else if(imageId == "editItemImage"){
-  //           this.editItemImageBase64 = "";
-  //           $("#editItemImageBase64").val("");
-  //         }
-  //         else{
-  //           $("#file_itemImage"+imageId).val("");
-  //           $("#txt_itemImage"+imageId).val("");
-  //         }
-  //         alert('Image dimensions must be less than or equal to '+this.imgWidth+'x'+this.imgHeight+'.');
-  //       } else {
-  //         // You can proceed with the image upload here
-  //         // alert('Image dimensions are valid.');
-  //         // Example: call a function to upload the image.
-  //         this.uploadImage(file,imageId);
-  //       }
-  //     };
-  //   };
-
-  //   reader.readAsDataURL(file);
-  // }
+  
 
   uploadImage(file: File, imageId: any){
     let wrongFile = false;
@@ -675,51 +593,7 @@ export class CommonPageComponent implements OnInit {
     myReader.readAsDataURL(file);
   }
 
-  // changeListener($event:any, imageId:any): void {
-  //   this.readThis($event.target, imageId);
-  // }
-
-  // readThis(inputValue: any, imageId:any): void {
-  //   var file: File = inputValue.files[0];
-  //   let wrongFile = false;
-  //   let fileName = file.name;
-  //   if(!(fileName.indexOf(".jpg") > -1 || fileName.indexOf(".jpeg") > -1 || 
-  //   fileName.indexOf(".png") > -1)){
-  //     this.layout.warningSnackBar("only .jpg, .jpeg, .png format accepted, please choose right file.");
-  //     wrongFile = true;
-  //   }
-  //   var myReader: FileReader = new FileReader();
-
-  //   myReader.onloadend = (e) => {
-  //     let image = myReader.result;
-  //     if(imageId == "restImage"){
-  //       this.restImageBase64 = image;
-  //     }
-  //     else if(imageId == "restBanner"){
-  //       this.restBannerBase64 = image
-  //     }
-  //     else if(imageId == 0){
-  //       this.catImageBase64 = image;
-  //     }
-  //     else{
-  //       $("#txt_itemImage"+imageId).val(image);
-  //     }
-      
-  //     if(wrongFile){
-  //       this.restImageBase64 = "";
-  //       this.restBannerBase64 = "";
-  //       if(imageId == 0){
-  //         this.catImageBase64 = "";
-  //         $("#file_catImage").val("");
-  //       }
-  //       else{
-  //         $("#file_itemImage"+imageId).val("");
-  //         $("#txt_itemImage"+imageId).val("");
-  //       }
-  //     }
-  //   }
-  //   myReader.readAsDataURL(file);
-  // }
+  
 
   addNewCategory(){
     this.closeAnyModal("addItemModal");
@@ -728,6 +602,14 @@ export class CommonPageComponent implements OnInit {
 
   newCatName:any = "";
   submitCategory(){
+    if(this.newCatName.trim() == ""){
+      this.layout.warningSnackBar("Please enter category name");
+      return;
+    }
+    else if(this.catImageBase64 == ""){
+      this.layout.warningSnackBar("Please select category image");
+      return;
+    }
     let jsonData ={
       insertType: "addCategory",
       restId: this.restId,
@@ -761,27 +643,28 @@ export class CommonPageComponent implements OnInit {
     this.restMobile = this.restData.mobile;
     this.restAddress = this.restData.address;
     this.restLatLong = this.restData.latLong;
+    this.restOpenTime = this.restData.openTime;
+    this.restCloseTime = this.restData.closeTime;
     this.restDisplayOrder = this.restData.displayOrder;
   }
 
   searchItemName:any = "";
   searchCategory:any = "";
+  searchIsEnable:any = "";
   searchItem(evt:any){
-    // let value = evt.target.value;
-    // this.searchItemList = [];
-    if(this.searchItemName.trim() == "" && this.searchCategory.trim() == ""){
-      this.searchItemList = this.itemList;
-    }
-      
-    else if(this.searchItemName != "" && this.searchCategory == ""){
-      this.searchItemList = this.itemList.filter((x: { itemName: any; }) => x.itemName.toLowerCase().includes(this.searchItemName.toLowerCase()));
-    }
-    else if (this.searchItemName == "" && this.searchCategory != ""){
-      this.searchItemList = this.itemList.filter((x: { catName: any; }) => x.catName.toLowerCase().includes(this.searchCategory.toLowerCase()));
-    }
-    else if(this.searchItemName != "" && this.searchCategory != ""){
-      this.searchItemList = this.itemList.filter((x: { itemName: any;catName: any; }) => x.itemName.toLowerCase().includes(this.searchItemName.toLowerCase()) && x.catName.toLowerCase().includes(this.searchCategory.toLowerCase()));
-    }
+    this.searchItemList = this.itemList.filter
+    (
+      (
+        x: { 
+          itemName: any;
+          catName: any;
+          enableTxt:any 
+        }
+      ) => 
+        x.itemName.toLowerCase().includes(this.searchItemName.toLowerCase()) && 
+        x.catName.toLowerCase().includes(this.searchCategory.toLowerCase()) && 
+        x.enableTxt.toLowerCase().includes(this.searchIsEnable.toLowerCase())
+    );
 
     if(this.searchItemList.length == 0){
       this.noItemFound = true;
@@ -805,6 +688,18 @@ export class CommonPageComponent implements OnInit {
     else{
       alert("No data for export");
     }
+  }
+
+  checkCloseTime():any{
+    let openTime:any = new Date("2023-11-17 "+this.restOpenTime);
+    let closeTime:any = new Date("2023-11-17 "+this.restCloseTime);
+    let diff = closeTime - openTime;
+    // console.log(openTime+" : "+closeTime+" : "+diff)
+    if(diff < 0){
+      this.layout.warningSnackBar("Close time should be greater than to open time");
+      return false;
+    }
+    return true;
   }
 
   openAnyModal(modalId:any){

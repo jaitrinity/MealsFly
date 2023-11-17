@@ -386,7 +386,7 @@ export class RestaurantComponent implements OnInit {
         const height = img.height;
 
         if (width > this.imgWidth || height > this.imgHeight) {
-          alert('Image dimensions must be less than or equal to '+this.imgWidth+'x'+this.imgHeight+'.');
+          alert('Image dimensions must be less equal to ('+this.imgWidth+'x'+this.imgHeight+')px.');
         } else {
           // You can proceed with the image upload here
           alert('Image dimensions are valid.');
@@ -430,44 +430,6 @@ export class RestaurantComponent implements OnInit {
     }
     myReader.readAsDataURL(file);
   }
-
-  // changeListener($event:any, imageId:any): void {
-  //   this.readThis($event.target, imageId);
-  // }
-
-  // readThis(inputValue: any, imageId:any): void {
-  //   var file: File = inputValue.files[0];
-  //   let wrongFile = false;
-  //   let fileName = file.name;
-  //   if(!(fileName.indexOf(".jpg") > -1 || fileName.indexOf(".jpeg") > -1 || 
-  //   fileName.indexOf(".png") > -1)){
-  //     this.layout.warningSnackBar("only .jpg, .jpeg, .png format accepted, please choose right file.");
-  //     wrongFile = true;
-  //   }
-  //   var myReader: FileReader = new FileReader();
-
-  //   myReader.onloadend = (e) => {
-  //     let image = myReader.result;
-  //     if(imageId == 0){
-  //       this.catImageBase64 = image;
-  //     }
-  //     else{
-  //       $("#txt_itemImage"+imageId).val(image);
-  //     }
-      
-  //     if(wrongFile){
-  //       if(imageId == 0){
-  //         this.catImageBase64 = "";
-  //         $("#file_catImage").val("");
-  //       }
-  //       else{
-  //         $("#file_itemImage"+imageId).val("");
-  //         $("#txt_itemImage"+imageId).val("");
-  //       }
-  //     }
-  //   }
-  //   myReader.readAsDataURL(file);
-  // }
 
   viewRestImage(restImgUrl:any){
     this.viewImgUrl = restImgUrl;

@@ -23,22 +23,15 @@
         <table class="table table-borderd table-striped table-hover my-table">
             <thead>
                 <tr>
-                    <th style="width: 120x;">
+                    <th style="width: 100px;">
                         Order Id &nbsp; 
-                        <i (click)="refreshSearchFilter()" title="Refresh table filter" class="fa fa-refresh" aria-hidden="true"></i>
                     </th>
                     <th>Restaurant</th>
                     <th>Customer</th>
-                    <th style="width: 120x;">Payment Mode</th>
-                    <!-- <th>Instruction</th> -->
-                    <!-- <th>Total Price</th> -->
-                    <!-- <th>Delivery Charge</th> -->
-                    <th>
-                        Grand Total &nbsp; 
-                    </th>
-                    <th>Status</th>
+                    <th style="width: 130px;">Payment Mode</th>
+                    <th style="width: 130px;">Grand Total</th>
+                    <th style="width: 150px;">Status</th>
                     <th>Order Datetime</th>
-                    <!-- <th></th> -->
                 </tr>
                 <tr>
                     <th>
@@ -57,16 +50,10 @@
                         <input type="text" class="form-control" placeholder="Payment Mode" [(ngModel)]="searchPaymentMode"
                         (keyup)="searchOrder($event)"/>
                     </th>
-                    <!-- <th>
-                        <input type="text" class="form-control" placeholder="Instruction" [(ngModel)]="searchInstruction"
+                    <th>
+                        <input type="text" class="form-control" placeholder="Grand Total" [(ngModel)]="searchGrandTotal"
                         (keyup)="searchOrder($event)"/>
-                    </th> -->
-                    <!-- <th>
-                        <input type="text" class="form-control" placeholder="Total Price" [(ngModel)]="searchTotalPrice"
-                        (keyup)="searchOrder($event)"/>
-                    </th> -->
-                    <!-- <th></th> -->
-                    <th></th>
+                    </th>
                     <th>
                         <input type="text" class="form-control" placeholder="Status" [(ngModel)]="searchStatus"
                         (keyup)="searchOrder($event)"/>
@@ -75,7 +62,6 @@
                         <input type="text" class="form-control" placeholder="Order Datetime" [(ngModel)]="searchDatatime"
                         (keyup)="searchOrder($event)"/>
                     </th>
-                    <!-- <th></th> -->
                 </tr>
             </thead>
             <tbody>
@@ -84,23 +70,13 @@
                     <td>{{o.restName}}</td>
                     <td>{{o.custName}}</td>
                     <td>{{o.paymentMode}}</td>
-                    <!-- <td>{{o.instruction}}</td> -->
-                    <!-- <td class="price-align">
-                        <i class="fa fa-inr" aria-hidden="true"></i> {{o.totalPrice}}
-                    </td>
-                    <td class="price-align">
-                        <i class="fa fa-inr" aria-hidden="true"></i> {{o.deliveryCharge}}
-                    </td> -->
                     <td class="price-align">
                         <i class="fa fa-inr" aria-hidden="true"></i> {{o.grandTotal}}
                     </td>
-                    <td>{{o.statusTxt}}</td>
+                    <td>
+                        <span [style.color]="o.statusColor">{{o.statusTxt}}</span>
+                    </td>
                     <td>{{o.orderDatetime}}</td>
-                    <!-- <td>
-                        <label (click)="getOrderItem(o)" title="View">
-                            <i class="fa fa-eye" aria-hidden="true"></i>
-                        </label>
-                    </td> -->
                 </tr>
             </tbody>
         </table>
@@ -141,7 +117,7 @@
                     </div>
                     <div class="col-md-2"></div>
                     <div class="col-md-10">
-                        {{viewOrderObj.statusTxt}}
+                        <span [style.color]="viewOrderObj.statusColor">{{viewOrderObj.statusTxt}}</span>
                     </div>
                     <div class="col-md-12 tx-bold">
                         Instruction
@@ -260,9 +236,8 @@
                     </tbody>
                 </table>
 			</div>
-			<!-- <div class="modal-footer"> -->
-                <!-- Footer -->
-			<!-- </div> -->
+			<div class="modal-footer">
+			</div>
 		</div>	
 	</div>
 </div>

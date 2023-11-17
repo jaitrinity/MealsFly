@@ -39,8 +39,7 @@ export class OrdersComponent implements OnInit {
         this.orderList = result;
         this.searchOrderList = this.orderList;
         this.layout.spinnerHide();
-        this.myPagination.itemCount = this.searchOrderList.length;
-        this.myPagination.createPagination();
+        this.searchOrder("");
       },
       error: _=>{
         this.layout.errorSnackBar(Constant.returnServerErrorMessage("orders"))
@@ -49,12 +48,10 @@ export class OrdersComponent implements OnInit {
   }
 
   viewOrderId: any;
-  // viewTotalPrice:any;
   viewOrderObj:any = {};
   getOrderItem(orderObj:any){
     this.viewOrderObj = orderObj;
     this.viewOrderId = orderObj.orderId;
-    // this.viewTotalPrice = orderObj.totalPrice;
     let jsonData = {
       searchType: "orderItem",
       orderId: this.viewOrderId
@@ -73,72 +70,39 @@ export class OrdersComponent implements OnInit {
     })
   }
 
-  refreshSearchFilter(){
-    this.searchOrderId = "";
-    this.searchRestaurant = "";
-    this.searchCustomer = "";
-    this.searchPaymentMode = "";
-    this.searchInstruction = "";
-    this.searchTotalPrice = "";
-    this.searchStatus = "";
-    this.searchDatatime = "";
-    this.searchOrder("");
-  }
-
   searchOrderId: any = "";
   searchRestaurant: any = "";
   searchCustomer: any = "";
   searchPaymentMode: any = "";
+  searchGrandTotal: any = "";
   searchInstruction: any = "";
   searchTotalPrice: any = "";
   searchStatus: any = "";
   searchDatatime: any = "";
   searchOrder(event:any){
-    if(this.searchOrderId.trim() == "" && this.searchRestaurant.trim() == "" && this.searchCustomer.trim() == "" && 
-    this.searchPaymentMode.trim() == "" && this.searchInstruction.trim() == "" && this.searchTotalPrice.trim() == "" && 
-    this.searchStatus.trim() == "" && this.searchDatatime.trim() == ""){
-      this.searchOrderList = this.orderList;
-    }
-    else{
-      if(this.searchOrderId.trim() != ""){
-        let searchData = this.searchOrderList.filter((x: { orderId: any; }) => x.orderId.includes(this.searchOrderId));
-        this.searchOrderList = searchData;
-      }
-      if(this.searchRestaurant.trim() != ""){
-        let searchData = this.searchOrderList.filter((x: { restName: any; }) => x.restName.toLowerCase().includes(this.searchRestaurant.toLowerCase()));
-        this.searchOrderList = searchData;
-      }
-      if(this.searchCustomer.trim() != ""){
-        let searchData = this.searchOrderList.filter((x: { custName: any; }) => x.custName.toLowerCase().includes(this.searchCustomer.toLowerCase()));
-        this.searchOrderList = searchData;
-      }
-      if(this.searchPaymentMode.trim() != ""){
-        let searchData = this.searchOrderList.filter((x: { paymentMode: any; }) => x.paymentMode.toLowerCase().includes(this.searchPaymentMode.toLowerCase()));
-        this.searchOrderList = searchData;
-      }
-      if(this.searchInstruction.trim() != ""){
-        let searchData = this.searchOrderList.filter((x: { instruction: any; }) => x.instruction.toLowerCase().includes(this.searchInstruction.toLowerCase()));
-        this.searchOrderList = searchData;
-      }
-      if(this.searchTotalPrice.trim() != ""){
-        let searchData = this.searchOrderList.filter((x: { totalPrice: any; }) => x.totalPrice.includes(this.searchTotalPrice));
-        this.searchOrderList = searchData;
-      }
-      if(this.searchStatus.trim() != ""){
-        let searchData = this.searchOrderList.filter((x: { statusTxt: any; }) => x.statusTxt.toLowerCase().includes(this.searchStatus.toLowerCase()));
-        this.searchOrderList = searchData;
-      }
-      if(this.searchDatatime.trim() != ""){
-        let searchData = this.searchOrderList.filter((x: { orderDatetime: any; }) => x.orderDatetime.includes(this.searchDatatime));
-        this.searchOrderList = searchData;
-      }
-    }
+    this.searchOrderList = this.orderList.filter(
+      (
+        x: 
+        { 
+          orderId: any; 
+          restName: any;
+          custName: any;
+          paymentMode: any;
+          grandTotal: any,
+          statusTxt: any;
+          orderDatetime: any;
+        }
+      ) => 
+      x.orderId.trim().includes(this.searchOrderId) && 
+      x.restName.trim().toLowerCase().includes(this.searchRestaurant.toLowerCase()) && 
+      x.custName.trim().toLowerCase().includes(this.searchCustomer.toLowerCase()) && 
+      x.paymentMode.trim().toLowerCase().includes(this.searchPaymentMode.toLowerCase()) && 
+      x.grandTotal.trim().toLowerCase().includes(this.searchGrandTotal.toLowerCase()) && 
+      x.statusTxt.trim().toLowerCase().includes(this.searchStatus.toLowerCase()) && 
+      x.orderDatetime.trim().includes(this.searchDatatime)
+    );
     this.myPagination.itemCount = this.searchOrderList.length;
     this.myPagination.createPagination();
-    
-    // else{
-    //   
-    // }
   }
 
   exportOrder(){

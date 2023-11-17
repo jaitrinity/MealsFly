@@ -9,17 +9,19 @@
             <thead>
                 <tr>
                     <th>Priority</th>
-                    <th>Name</th>
+                    <th style="width: 150px;">Name</th>
                     <th>Mobile</th>
-                    <th>Address</th>
-                    <!-- <th>Approve</th> -->
-                    <th>Action</th>
+                    <th style="width: 200px;">Address</th>
+                    <th  style="width: 150px;">Open - Close Time</th>
+                    <th>Status</th>
+                    <th>Enable/Disable</th>
                     <th>Image</th>
                     <th>Banner</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr style="font-size: 14px;">
                     <td>{{restData.displayOrder}}</td>
                     <td>{{restData.name}}</td>
                     <td>{{restData.mobile}}</td>
@@ -28,43 +30,13 @@
                             <i class="fa fa-map-marker" title="View location on map" aria-hidden="true"></i>
                         </a>
                     </td>
-                    <!-- <td>
-                        <div *ngIf="restData.approve == 0;">
-                            <label (click)="appRejRestaurant(restData.restId, 1, 'Approve')"title="Approve">
-                                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
-                            </label> &nbsp;
-                            <label (click)="appRejRestaurant(restData.restId, 2, 'Reject')" title="Reject">
-                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
-                            </label>
-                        </div>
-                        <div *ngIf="restData.approve == 1;">
-                            <label (click)="appRejRestaurant(restData.restId, 2, 'Reject')" title="Reject">
-                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
-                            </label>
-                        </div>
-                        <div *ngIf="restData.approve == 2;">
-                            <label (click)="appRejRestaurant(restData.restId, 1, 'Approve')" title="Approve">
-                                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
-                            </label>
-                        </div>
-                    </td> -->
+                    <td>{{restData.openCloseTime}}</td>
                     <td>
-                        <label (click)="editViewRestData()" title="Edit">
-                            <i class="fa fa-pencil" aria-hidden="true"></i>
-                        </label> &nbsp;
-                        <span *ngIf="restData.approve == 1">
-                            <span *ngIf="restData.enable == 0 || restData.enable == 2">
-                                <label (click)="enaDisRestaurant(restData.restId, 1, 'Enable')" title="Enable">
-                                    <i class="fa fa-toggle-on" aria-hidden="true"></i>
-                                </label>
-                            </span>
-                            &nbsp;
-                            <span *ngIf="restData.enable == 1;">
-                                <label (click)="enaDisRestaurant(restData.restId, 2, 'Disable')" title="Disable">
-                                    <i class="fa fa-toggle-off" aria-hidden="true"></i>
-                                </label>
-                            </span>
-                        </span>
+                        <span [ngClass]="{'text-mealsfly-green': restData.status == 'Open'}">{{restData.status}}</span>
+                        <!-- {{restData.status}} -->
+                    </td>
+                    <td>
+                        <span [ngClass]="{'text-mealsfly-green': restData.enable == 1}">{{restData.enableTxt}}</span>
                     </td>
                     <td>
                         <label *ngIf="isTrue(restData.image)" (click)="viewImage(restData.image)">
@@ -76,6 +48,11 @@
                             <img [src]="restData.banner" class="img-thumbnail"/>
                         </label>
                     </td>
+                    <td>
+                        <label (click)="editViewRestData()" title="Edit">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </label> &nbsp;
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -84,7 +61,7 @@
 
 <div class="row" style="margin-bottom: 2px;">
     <div class="col-md-8">
-        <span class="text-mealsfly" style="font-size: 1.3rem; font-weight: 400; border-bottom: 1px solid;">Item List</span>
+        <span class="text-mealsfly-red" style="font-size: 1.3rem; font-weight: 400; border-bottom: 1px solid;">Item List</span>
     </div>
     <div class="col-md-4" style="text-align: right;">
         <button class="btn btn-sm btn-info text-white" (click)="addCatItem()">Add Item</button>
@@ -103,6 +80,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Category</th>
+                    <th>Enable/Disable</th>
                     <th>Unit</th>
                     <th></th>
                 </tr>
@@ -113,6 +91,10 @@
                     </th>
                     <th>
                         <input type="text" class="form-control" placeholder="Category" [(ngModel)]="searchCategory"
+                        (keyup)="searchItem($event)"/>
+                    </th>
+                    <th>
+                        <input type="text" class="form-control" placeholder="Enable/Disable" [(ngModel)]="searchIsEnable"
                         (keyup)="searchItem($event)"/>
                     </th>
                     <th></th>
@@ -127,6 +109,9 @@
                         &nbsp; <i class="fa fa-pencil" aria-hidden="true" title="Edit this item" (click)="editItem(items)"></i>
                     </td>
                     <td>{{items.catName}}</td>
+                    <td>
+                        <span [ngClass]="{'text-mealsfly-green': items.enable == 1}">{{items.enableTxt}}</span>
+                    </td>
                     <td>
                         <div *ngFor="let units of items.itemUnitList">
                             <span *ngIf="units.price !=''">
@@ -238,12 +223,11 @@
 				<button class="btn btn-sm btn-danger" (click)="closeAnyModal('editRestModal')">Close</button>
 			</div>
 			<div class="modal-body">
-                <!-- <div class="row">
-                    <div class="col-md-6">
-                        <label>Priority * &nbsp; <i title="Minimum priority is display on top" class="fa fa-info-circle" aria-hidden="true"></i></label>
-                        <input type="text" class="form-control resetField" [(ngModel)]="restDisplayOrder" [OnlyNumber]="true" [disabled]="true"/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="text-warning">! {{imgInfo}}</span>
                     </div>
-                </div> -->
+                </div>
                 <div class="row">
                     <div class="col-md-6">
                       <label>Name *</label>
@@ -258,7 +242,6 @@
                     <div class="col-md-6">
                         <label>Address</label>
                         <textarea rows="3" class="form-control resetField" style="resize: none;" [(ngModel)]="restAddress"></textarea>
-                        <!-- <input type="text" class="form-control resetField" [(ngModel)]="restAddress"/> -->
                     </div>
                     <div class="col-md-6">
                         <label>Latlong *</label>
@@ -267,12 +250,22 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <label>Image &nbsp; <i class="fa fa-info-circle" [title]="restImgInfo"></i></label>
+                        <label>Open Time</label>
+                        <input type="time" class="form-control resetField" [(ngModel)]="restOpenTime"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Close Time</label>
+                        <input type="time" class="form-control resetField" [(ngModel)]="restCloseTime"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Image</label>
                         <input type="file" id="restImageBase64" (change)="changeListener($event, 'restImage')" accept=".jpg,.jpeg,.png" class="form-control resetField" />
                         <input type="hidden" [(ngModel)]="restImageBase64" class="resetField"/>
                     </div>
                     <div class="col-md-6">
-                        <label>Banner &nbsp; <i class="fa fa-info-circle" [title]="restBnrInfo"></i></label>
+                        <label>Banner</label>
                         <input type="file" id="restBannerBase64" (change)="changeListener($event, 'restBanner')" accept=".jpg,.jpeg,.png" class="form-control resetField" />
                         <input type="hidden" [(ngModel)]="restBannerBase64" class="resetField"/>
                     </div>
@@ -325,7 +318,7 @@
 			<div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <span class="text-warning">! {{imgInfo}}</span>
+                        <span class="text-warning">! {{itemImgInfo}}</span>
                     </div>
                 </div>
                 <div class="row">
@@ -415,13 +408,13 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label>Category</label>
+                        <label>Category *</label>
                         <input type="text" class="form-control resetField" [(ngModel)]="newCatName"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label>Image</label>
+                        <label>Image *</label>
                         <input type="file" id="file_catImage" accept=".jpg,.jpeg,.png" (change)="changeListener($event,0)" class="form-control resetField" />
                         <input type="hidden" [(ngModel)]="catImageBase64" class="form-control resetField"/>
                     </div>

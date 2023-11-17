@@ -26,7 +26,7 @@ export class DeliveryboysComponent implements OnInit {
   editAadharNo: string = "";
   editAadharBase64: any = "";
   editPanBase64: any = "";
-  editPanNo: string = "";
+  editPanNo: any = "";
   riderList: any = [];
   searchRiderList : any = [];
   constructor(private sharedService: SharedService, private layout: LayoutComponent){
@@ -54,6 +54,7 @@ export class DeliveryboysComponent implements OnInit {
         this.riderList = result;
         this.searchRiderList = this.riderList;
         this.layout.spinnerHide();
+        this.searchRider("");
       },
       error: _=>{
         this.layout.errorSnackBar(Constant.returnServerErrorMessage("rider"));
@@ -91,98 +92,6 @@ export class DeliveryboysComponent implements OnInit {
       }
     })
   }
-
-  // changeListener($event:any, imageId:any):void{
-  //   const selectedFile = $event.target.files[0];
-  //   if (selectedFile) {
-  //     this.checkImageDimensions(selectedFile,imageId);
-  //   }
-  // }
-  // checkImageDimensions(file: File, imageId:any) {
-  //   const reader = new FileReader();
-
-  //   reader.onload = (e: any) => {
-  //     const img = new Image();
-  //     img.src = e.target.result;
-
-  //     img.onload = () => {
-  //       const width = img.width;
-  //       const height = img.height;
-
-  //       if (width > this.imgWidth || height > this.imgHeight) {
-  //         if(imageId == 0){
-  //           this.aadharBase64 = "";
-  //           $("#file_aadharBase64").val("");
-  //         }
-  //         else if(imageId == 1){
-  //           this.panBase64 = "";
-  //           $("#file_panBase64").val("");
-  //         }
-  //         else if(imageId == 2){
-  //           this.editAadharBase64 = "";
-  //           $("#file_editAadharBase64").val("");
-  //         }
-  //         else if(imageId == 3){
-  //           this.editPanBase64 = "";
-  //           $("#file_editPanBase64").val("");
-  //         }
-  //         alert('Image dimensions must be less than or equal to '+this.imgWidth+'x'+this.imgHeight+'.');
-  //       } else {
-  //         // You can proceed with the image upload here
-  //         // alert('Image dimensions are valid.');
-  //         // Example: call a function to upload the image.
-  //         this.uploadImage(file,imageId);
-  //       }
-  //     };
-  //   };
-  //   reader.readAsDataURL(file);
-  // }
-  // uploadImage(file: File, imageId: any){
-  //   let wrongFile = false;
-  //   let fileName = file.name;
-  //   if(!(fileName.indexOf(".jpg") > -1 || fileName.indexOf(".jpeg") > -1 || 
-  //   fileName.indexOf(".png") > -1)){
-  //     this.layout.warningSnackBar("only .jpg, .jpeg, .png format accepted, please choose right file.");
-  //     wrongFile = true;
-  //   }
-  //   var myReader: FileReader = new FileReader();
-
-  //   myReader.onloadend = (e) => {
-  //     let image = myReader.result;
-  //     if(imageId == 0){
-  //       this.aadharBase64 = image;
-  //     }
-  //     else if(imageId == 1){
-  //       this.panBase64 = image
-  //     }
-  //     else if(imageId == 2){
-  //       this.editAadharBase64 = image;
-  //     }
-  //     else if(imageId == 3){
-  //       this.editPanBase64 = image
-  //     }
-      
-  //     if(wrongFile){
-  //       if(imageId == 0){
-  //         this.aadharBase64 = "";
-  //         $("#file_aadharBase64").val("");
-  //       }
-  //       else if(imageId == 1){
-  //         this.panBase64 = "";
-  //         $("#file_panBase64").val("");
-  //       }
-  //       else if(imageId == 2){
-  //         this.editPanBase64 = "";
-  //         $("#file_editPanBase64").val("");
-  //       }
-  //       else if(imageId == 3){
-  //         this.editPanBase64 = "";
-  //         $("#file_editPanBase64").val("");
-  //       }
-  //     }
-  //   }
-  //   myReader.readAsDataURL(file);
-  // }
 
   changeListener($event:any, imageId:any): void {
     this.readThis($event.target, imageId);
@@ -338,7 +247,7 @@ export class DeliveryboysComponent implements OnInit {
       this.layout.warningSnackBar("Select aadhar file");
       return;
     }
-    else if(this.panNo.trim() != "" && this.panNo.trim().length != 10){
+    else if(this.editPanNo.trim() != "" && this.editPanNo.trim().length != 10){
       this.layout.warningSnackBar("PAN no lenght should be equal to 10")
       return;
     }
@@ -382,19 +291,23 @@ export class DeliveryboysComponent implements OnInit {
   searchAadharNo: any = "";
   searchPanNo: any = "";
   searchRider(evt:any){
-    // let value = evt.target.value;
-    // this.searchItemList = [];
-    if(this.searchRiderName.trim() == "" && this.searchMobile.trim() == "" && 
-    this.searchAadharNo.trim() == "" && this.searchPanNo.trim() == ""){
-      this.searchRiderList = this.riderList;
-    }
-      
-    else if(this.searchRiderName != "" && this.searchMobile == ""){
-      this.searchRiderList = this.riderList.filter((x: { name: any; }) => x.name.toLowerCase().includes(this.searchRiderName.toLowerCase()));
-    }
-    else if (this.searchRiderName == "" && this.searchMobile != ""){
-      this.searchRiderList = this.riderList.filter((x: { mobile: any; }) => x.mobile.toLowerCase().includes(this.searchMobile.toLowerCase()));
-    }
+    this.searchRiderList = this.riderList.filter
+    (
+      (
+        x: 
+        {
+          name: any; 
+          mobile: any;
+          aadharNo:any;
+          panNo:any
+        }
+      ) => 
+      x.name.trim().toLowerCase().includes(this.searchRiderName.toLowerCase()) && 
+      x.mobile.trim().toLowerCase().includes(this.searchMobile.toLowerCase()) && 
+      x.aadharNo.trim().toLowerCase().includes(this.searchAadharNo.toLowerCase()) && 
+      x.panNo.trim().toLowerCase().includes(this.searchPanNo.toLowerCase())
+    );
+    
     this.myPagination.itemCount = this.searchRiderList.length;
     this.myPagination.createPagination();
     

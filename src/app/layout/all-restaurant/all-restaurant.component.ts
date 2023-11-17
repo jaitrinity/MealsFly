@@ -49,8 +49,7 @@ export class AllRestaurantComponent implements OnInit {
         this.searchRestList = this.restList;
         this.layout.spinnerHide();
 
-        this.myPagination.itemCount = this.searchRestList.length;
-        this.myPagination.createPagination();
+        this.searchRestaurant("");
       },
       error: _=>{
         this.layout.errorSnackBar(Constant.returnServerErrorMessage("restaurant"))
@@ -123,7 +122,6 @@ export class AllRestaurantComponent implements OnInit {
         this.layout.errorSnackBar(Constant.returnServerErrorMessage("updateRestPeriority"))
       }
     })
-    // console.log(jsonData)
   }
 
   searchRestId: any="";
@@ -132,39 +130,57 @@ export class AllRestaurantComponent implements OnInit {
   searchRestPriority: any="";
   searchRestApprove: any="";
   searchRestEnable: any="";
+  searchRestStatus: any="";
   searchRestaurant(evt:any){
-    if(this.searchRestId.trim() == "" && this.searchRestName.trim() == "" && this.searchRestMobile.trim() == "" && 
-    this.searchRestPriority.trim() == "" && this.searchRestApprove.trim() == "" && this.searchRestEnable.trim() == ""){
-      this.searchRestList = this.restList;
-    }
-    else{
-      if(this.searchRestId.trim() != ""){
-        let searchData = this.searchRestList.filter((x: { restId: any; }) => x.restId.includes(this.searchRestId));
-        this.searchRestList = searchData;
-      }
-      if(this.searchRestName.trim() != ""){
-        let searchData = this.searchRestList.filter((x: { name: any; }) => x.name.toLowerCase().includes(this.searchRestName.toLowerCase()));
-        this.searchRestList = searchData;
-      }
-      if(this.searchRestMobile.trim() != ""){
-        let searchData = this.searchRestList.filter((x: { mobile: any; }) => x.mobile.toLowerCase().includes(this.searchRestMobile.toLowerCase()));
-        this.searchRestList = searchData;
-      }
-      if(this.searchRestPriority.trim() != ""){
-        let searchData = this.searchRestList.filter((x: { displayOrder: any; }) => x.displayOrder.includes(this.searchRestPriority));
-        this.searchRestList = searchData;
-      }
-      if(this.searchRestApprove.trim() != ""){
-        let searchData = this.searchRestList.filter((x: { approveTxt: any; }) => x.approveTxt.toLowerCase().includes(this.searchRestApprove.toLowerCase()));
-        this.searchRestList = searchData;
-      }
-      if(this.searchRestEnable.trim() != ""){
-        let searchData = this.searchRestList.filter((x: { enableTxt: any; }) => x.enableTxt.toLowerCase().includes(this.searchRestEnable.toLowerCase()));
-        this.searchRestList = searchData;
-      }
-    }
+    this.searchRestList = this.restList.filter
+    (
+      (x: 
+        { 
+          displayOrder: any;
+          name: any;
+          status:any;
+          enableTxt:any
+        }
+      ) => 
+      x.displayOrder.trim().includes(this.searchRestPriority) && 
+      x.name.trim().toLowerCase().includes(this.searchRestName.toLowerCase()) && 
+      x.status.trim().toLowerCase().includes(this.searchRestStatus.toLowerCase()) && 
+      x.enableTxt.trim().toLowerCase().includes(this.searchRestEnable.toLowerCase())
+    );
     this.myPagination.itemCount = this.searchRestList.length;
     this.myPagination.createPagination();
+  }
+
+  changeRestStatus(restId:any, action:any, actionTxt:any){
+    let isConfirm = confirm("Do you want to "+actionTxt+" this restaurant?");
+    if(!isConfirm){
+      return;
+    }
+    let updateType = "enaDisRest";
+    if(actionTxt == 'Open' || actionTxt == 'Close'){
+      updateType = "openCloseRest";
+    }
+    let jsonData = {
+      updateType: updateType,
+      restId: restId,
+      action: action,
+      actionTxt: actionTxt
+    }
+    this.sharedService.updateData(jsonData)
+    .pipe(take(1)).subscribe({
+      next: result=>{
+        if(result.code == Constant.SUCCESSFUL_STATUS_CODE){
+          this.getRestList();
+          this.layout.successSnackBar(result.message)
+        }
+        else{
+          this.layout.warningSnackBar(result.message)
+        }
+      },
+      error: _=>{
+        this.layout.errorSnackBar(Constant.returnServerErrorMessage("enaDisRest"))
+      }
+    })
   }
 
   exportRestaurant(){

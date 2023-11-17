@@ -1,19 +1,6 @@
-<!-- <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="pacman">
-    <p style="color: white" > Loading... </p>
-</ngx-spinner> -->
 <div class="row">
-    <!-- <div class="col-md-2">
-        <label>Start Date <i (click)="filterStartDate=''" class="fa fa-refresh" aria-hidden="true"></i></label>
-        <input type="date" class="form-control" [(ngModel)]="filterStartDate"/>
-    </div>
-    <div class="col-md-2">
-        <label>End Date <i (click)="filterEndDate=''" class="fa fa-refresh" aria-hidden="true"></i></label>
-        <input type="date" class="form-control" [min]="filterStartDate" [(ngModel)]="filterEndDate"/>
-    </div> -->
     <div class="col-md-4">
         <label style="display: block;color: transparent;">0</label>
-        <!-- <button class="btn btn-sm btn-danger" (click)="getOrders()">Filter</button> -->
-        &nbsp; 
         <button class="btn btn-sm btn-danger" (click)="exportRestaurant()" *ngIf="searchRestList.length != 0">
             Export
         </button>
@@ -26,14 +13,11 @@
         <table class="table table-borderd table-striped my-table">
             <thead>
                 <tr>
-                    <th style="width: 100px;">Priority</th>
-                    <!-- <th>Rest Id</th> -->
+                    <th style="width: 120px;">Priority</th>
                     <th>Name</th>
-                    <th>Mobile</th>
-                    <!-- <th>Approve</th> -->
-                    <th>Enable</th>
-                    <th>Image</th>
-                    <th>Banner</th>
+                    <th style="width: 200px">Open Time - Close Time</th>
+                    <th style="width: 150px">Status</th>
+                    <th style="width: 150px">Enable/Disable</th>
                     <th>View</th>
                 </tr>
                 <tr>
@@ -41,28 +25,19 @@
                         <input type="text" class="form-control" placeholder="Priority" [(ngModel)]="searchRestPriority"
                         (keyup)="searchRestaurant($event)"/>
                     </th>
-                    <!-- <th>
-                        <input type="text" class="form-control" placeholder="Name" [(ngModel)]="searchRestId"
-                        (keyup)="searchRestaurant($event)"/>
-                    </th> -->
                     <th>
                         <input type="text" class="form-control" placeholder="Name" [(ngModel)]="searchRestName"
                         (keyup)="searchRestaurant($event)"/>
                     </th>
+                    <th></th>
                     <th>
-                        <input type="text" class="form-control" placeholder="Mobile" [(ngModel)]="searchRestMobile"
+                        <input type="text" class="form-control" placeholder="Status" [(ngModel)]="searchRestStatus"
                         (keyup)="searchRestaurant($event)"/>
                     </th>
-                    <!-- <th>
-                        <input type="text" class="form-control" placeholder="Approve" [(ngModel)]="searchRestApprove"
-                        (keyup)="searchRestaurant($event)"/>
-                    </th> -->
                     <th>
                         <input type="text" class="form-control" placeholder="Enable" [(ngModel)]="searchRestEnable"
                         (keyup)="searchRestaurant($event)"/>
                     </th>
-                    <th></th>
-                    <th></th>
                     <th></th>
                 </tr>
             </thead>
@@ -79,24 +54,35 @@
                             &nbsp;<i (click)="dis(2,rest.restId,rest.displayOrder)" class="fa fa-times-circle" aria-hidden="true"></i>
                         </div>
                     </td>
-                    <!-- <td>{{rest.restId}}</td> -->
                     <td>{{rest.name}}</td>
-                    <td>{{rest.mobile}}</td>
-                    <!-- <td>
-                        {{rest.approveTxt}}
-                    </td> -->
+                    <td>{{rest.openCloseTime}}</td>
                     <td>
-                        {{rest.enableTxt}}
+                        <span *ngIf="rest.status == 'Open'" class="text-mealsfly-green">
+                            {{rest.status}} &nbsp;
+                            <label (click)="changeRestStatus(rest.restId, 0, 'Close')" title="Close">
+                                <i class="fa fa-toggle-off" aria-hidden="true"></i>
+                            </label>
+                        </span>
+                        <span *ngIf="rest.status == 'Close'">
+                            {{rest.status}} &nbsp;
+                            <label (click)="changeRestStatus(rest.restId, 1, 'Open')" title="Open">
+                                <i class="fa fa-toggle-on" aria-hidden="true"></i>
+                            </label>
+                        </span>
                     </td>
                     <td>
-                        <label *ngIf="isTrue(rest.image)" (click)="viewImage(rest.image)">
-                            <img [src]="rest.image" class="img-thumbnail"/>
-                        </label>
-                    </td>
-                    <td>
-                        <label *ngIf="isTrue(rest.banner)" (click)="viewImage(rest.banner)">
-                            <img [src]="rest.banner" class="img-thumbnail"/>
-                        </label>
+                        <span *ngIf="rest.enable == 0 || rest.enable == 2">
+                            {{rest.enableTxt}} &nbsp;
+                            <label (click)="changeRestStatus(rest.restId, 1, 'Enable')" title="Enable">
+                                <i class="fa fa-toggle-on" aria-hidden="true"></i>
+                            </label>
+                        </span>
+                        <span *ngIf="rest.enable == 1;" class="text-mealsfly-green">
+                            {{rest.enableTxt}} &nbsp;
+                            <label (click)="changeRestStatus(rest.restId, 2, 'Disable')" title="Disable">
+                                <i class="fa fa-toggle-off" aria-hidden="true"></i>
+                            </label>
+                        </span>
                     </td>
                     <td>
                         <label (click)="getRestItem(rest)" title="View items">
@@ -110,7 +96,7 @@
 </div>
 <app-pagination *ngIf="searchRestList.length !=0" 
     [itemCount]="searchRestList.length" 
-    [perPageRecord]="5" 
+    [perPageRecord]="10" 
     [showPage]="10">
 </app-pagination>
 

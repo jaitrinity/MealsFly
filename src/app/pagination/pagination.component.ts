@@ -35,13 +35,14 @@ export class PaginationComponent implements OnInit {
     for(let i=1;i<=this.noOfPage;i++){
       let mode = i%this.showPage;
       pagination += i;
-      if(mode == 0){
-        pagination += ":"
-      }
-      else{
-        if(i != this.noOfPage)
+      if(i != this.noOfPage){
+        if(mode == 0){
+          pagination += ":"
+        }
+        else{
           pagination += ",";
-      }
+        }
+      }  
     }
     this.paginationArr = pagination.split(":");
     setTimeout(() => {

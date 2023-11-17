@@ -49,8 +49,11 @@ html, body{
 ::-webkit-scrollbar-thumb:hover {
   background: #01c75a; 
 }
-.text-mealsfly{
+.text-mealsfly-red{
     color: $mealsFlyRed;
+}
+.text-mealsfly-green{
+  color: $mealsFlyGreen;
 }
 .bg-mf-green{
   background: $mealsFlyGreen;
@@ -64,6 +67,7 @@ thead tr th{
 }
 .fa{
   cursor: pointer;
+  font-size: 15px !important;
 }
 // html, body { height: 100%; }
 // body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
@@ -116,10 +120,12 @@ label{
 // }
 .img-thumbnail{
   cursor: pointer;
-  width: 25px;
+  width: 40px;
+  height: 40px;
 }
 .table-row{
   display: none;
+  font-size: 14px;
 }
 .price-align{
   text-align: right;
