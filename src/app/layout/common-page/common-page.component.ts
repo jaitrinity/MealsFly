@@ -25,6 +25,7 @@ export class CommonPageComponent implements OnInit {
   restName: any = "";
   restMobile: any = "";
   restAddress: any = "";
+  restPincode: any = "";
   restLatLong: any = "";
   restOpenTime: any = "";
   restCloseTime: any = "";
@@ -91,7 +92,8 @@ export class CommonPageComponent implements OnInit {
         this.resetItemList();
       },
       error: _=>{
-        this.layout.errorSnackBar(Constant.returnServerErrorMessage("restaurantData"))
+        this.layout.errorSnackBar(Constant.returnServerErrorMessage("restaurantData"));
+        this.layout.spinnerHide();
       }
     })
   }
@@ -436,6 +438,10 @@ export class CommonPageComponent implements OnInit {
       this.layout.warningSnackBar("Mobile length should be 10");
       return false;
     }
+    else if(this.restPincode.trim() !="" && this.restPincode.trim().length != 6){
+      this.layout.warningSnackBar("Pincode length should be 6");
+      return false;
+    }
     else if(this.restLatLong.trim() == ""){
       this.layout.warningSnackBar("Latlong should be fill");
       return false;
@@ -460,6 +466,7 @@ export class CommonPageComponent implements OnInit {
       name: this.restName,
       mobile: this.restMobile,
       address: this.restAddress,
+      pincode: this.restPincode,
       latlong: this.restLatLong,
       image64:this.restImageBase64,
       banner64:this.restBannerBase64,
@@ -642,6 +649,7 @@ export class CommonPageComponent implements OnInit {
     this.restName = this.restData.name;
     this.restMobile = this.restData.mobile;
     this.restAddress = this.restData.address;
+    this.restPincode = this.restData.pincode;
     this.restLatLong = this.restData.latLong;
     this.restOpenTime = this.restData.openTime;
     this.restCloseTime = this.restData.closeTime;

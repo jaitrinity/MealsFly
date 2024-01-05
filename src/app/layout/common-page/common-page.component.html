@@ -25,7 +25,7 @@
                     <td>{{restData.displayOrder}}</td>
                     <td>{{restData.name}}</td>
                     <td>{{restData.mobile}}</td>
-                    <td>{{restData.address}} 
+                    <td>{{restData.address}} - {{restData.pincode}} 
                         <a *ngIf="isTrue(restData.address)" href="https://www.google.co.in/maps/search/{{restData.latLong}}" target="_blank">
                             <i class="fa fa-map-marker" title="View location on map" aria-hidden="true"></i>
                         </a>
@@ -241,11 +241,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label>Address</label>
-                        <textarea rows="3" class="form-control resetField" style="resize: none;" [(ngModel)]="restAddress"></textarea>
+                        <textarea rows="4" class="form-control resetField" style="resize: none;" [(ngModel)]="restAddress"></textarea>
                     </div>
                     <div class="col-md-6">
                         <label>Latlong *</label>
                         <input type="text" class="form-control resetField" [(ngModel)]="restLatLong"/>
+
+                        <label>Pincode *</label>
+                        <input type="text" class="form-control resetField" [(ngModel)]="restPincode" [OnlyNumber]="true" maxlength="6"/>
                     </div>
                 </div>
                 <div class="row">

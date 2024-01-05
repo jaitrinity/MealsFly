@@ -42,7 +42,8 @@ export class OrdersComponent implements OnInit {
         this.searchOrder("");
       },
       error: _=>{
-        this.layout.errorSnackBar(Constant.returnServerErrorMessage("orders"))
+        this.layout.errorSnackBar(Constant.returnServerErrorMessage("orders"));
+        this.layout.spinnerHide();
       }
     })
   }
@@ -65,7 +66,8 @@ export class OrdersComponent implements OnInit {
         this.openAnyModal("viewOrderModal");
       },
       error: _=>{
-        this.layout.errorSnackBar(Constant.returnServerErrorMessage("orderItem"))
+        this.layout.errorSnackBar(Constant.returnServerErrorMessage("orderItem"));
+        this.layout.spinnerHide();
       }
     })
   }

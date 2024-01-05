@@ -26,6 +26,10 @@ import {MatMenuModule} from '@angular/material/menu';
 import { AllRestaurantComponent } from './layout/all-restaurant/all-restaurant.component';
 import { PaginationComponent } from './pagination/pagination.component'
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { ComplaintComponent } from './layout/complaint/complaint.component';
+import { PartnerReportComponent } from './layout/partner-report/partner-report.component';
+import { RiderReportComponent } from './layout/rider-report/rider-report.component';
+import { WipComponent } from './wip/wip.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +50,11 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     OnlyNumber,
     OnlyNumberWithDecimal,
     AllRestaurantComponent,
-    PaginationComponent
+    PaginationComponent,
+    ComplaintComponent,
+    PartnerReportComponent,
+    RiderReportComponent,
+    WipComponent
   ],
   imports: [
     BrowserModule,

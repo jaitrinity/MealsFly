@@ -8,12 +8,29 @@ import { take } from 'rxjs';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
+  menuList: any = [];
   restMenuList: any = [];
   constructor(private sharedService: SharedService){
 
   }
   ngOnInit(): void {
+    this.getMenuList();
     // this.getRestMenuList();
+  }
+
+  getMenuList(){
+    let jsonData = {
+      searchType: "menuList",
+    }
+    this.sharedService.getAllList(jsonData)
+    .pipe(take(1)).subscribe({
+      next: result=>{
+        this.menuList = result;
+      },
+      error: _=>{
+        alert("Something wrong in menuList service")
+      }
+    })
   }
 
   getRestMenuList(){

@@ -1,5 +1,5 @@
 export class Constant{
-    // public static phpServiceURL = "http://www.trinityapplab.in/MealsFly/";
+    // public static phpServiceURL = "https://www.trinityapplab.in/MealsFly/";
     public static phpServiceURL = "/MealsFly/";
     public static SUCCESSFUL_STATUS_CODE = "200";
     public static MEALSFLY_PRIVATE_KEY = "MEALSFLYPRIVATEKEY";

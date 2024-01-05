@@ -1,10 +1,10 @@
 <div class="row">
     <div class="col-md-2">
-        <label>Start Date <i (click)="filterStartDate=''" class="fa fa-refresh" aria-hidden="true"></i></label>
+        <label>From Date <i (click)="filterStartDate=''" class="fa fa-refresh" aria-hidden="true"></i></label>
         <input type="date" class="form-control" [(ngModel)]="filterStartDate"/>
     </div>
     <div class="col-md-2">
-        <label>End Date <i (click)="filterEndDate=''" class="fa fa-refresh" aria-hidden="true"></i></label>
+        <label>To Date <i (click)="filterEndDate=''" class="fa fa-refresh" aria-hidden="true"></i></label>
         <input type="date" class="form-control" [min]="filterStartDate" [(ngModel)]="filterEndDate"/>
     </div>
     <div class="col-md-4">
@@ -119,15 +119,22 @@
                     <div class="col-md-10">
                         <span [style.color]="viewOrderObj.statusColor">{{viewOrderObj.statusTxt}}</span>
                     </div>
-                    <div class="col-md-12 tx-bold">
+                    <div class="col-md-12 tx-bold" *ngIf="viewOrderObj.cancellationMsg != null">
+                        Cancellation Reason
+                    </div>
+                    <div class="col-md-2" *ngIf="viewOrderObj.cancellationMsg != null"></div>
+                    <div class="col-md-10" *ngIf="viewOrderObj.cancellationMsg != null">
+                        {{viewOrderObj.cancellationMsg}}
+                    </div>
+                    <div class="col-md-12 tx-bold" *ngIf="viewOrderObj.instruction != ''">
                         Instruction
                     </div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-10">
+                    <div class="col-md-2" *ngIf="viewOrderObj.instruction != ''"></div>
+                    <div class="col-md-10" *ngIf="viewOrderObj.instruction != ''">
                         {{viewOrderObj.instruction}}
                     </div>
                 </div>
-            
+                
                 <div class="row">
                     <div class="col-md-12" style="text-align: center;font-size: 13px;">
                          ----Order Summary : Total Items {{orderItemList.length}} ----
@@ -236,8 +243,8 @@
                     </tbody>
                 </table>
 			</div>
-			<div class="modal-footer">
-			</div>
+			<!-- <div class="modal-footer">
+			</div> -->
 		</div>	
 	</div>
 </div>

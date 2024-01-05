@@ -20,10 +20,9 @@ export class AllRestaurantComponent implements OnInit {
   searchRestList:any = [];
   constructor(private sharedService: SharedService, 
     private layout: LayoutComponent,
-    private router: Router, 
-    private _title: Title,
+    private router: Router
     ){
-    _title.setTitle("MealsFly | Restaurants")
+    layout.setPageTitle("Restaurants")
     $(document).ready(function(){
       $('.turn').on('click', function(){
         var angle = ($('.viewImg').data('angle') + 90) || 90;
@@ -53,6 +52,7 @@ export class AllRestaurantComponent implements OnInit {
       },
       error: _=>{
         this.layout.errorSnackBar(Constant.returnServerErrorMessage("restaurant"))
+        this.layout.spinnerHide();
       }
     })
   }
