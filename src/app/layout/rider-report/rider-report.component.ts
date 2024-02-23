@@ -42,6 +42,10 @@ export class RiderReportComponent implements OnInit {
     .pipe(take(1)).subscribe({
       next: result=>{
         this.riderList = result;
+        if(this.riderList !=0){
+          this.filterRider = this.riderList[0].riderId;
+          this.getRiderReport();
+        }
       },
       error: _=>{
         this.layout.errorSnackBar(Constant.returnServerErrorMessage("allRider"));

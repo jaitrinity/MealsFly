@@ -302,7 +302,7 @@ export class CommonPageComponent implements OnInit {
       }
       else if(itemImage == ""){
         this.layout.warningSnackBar("Select a image");
-        $("#itemName"+id).focus();
+        $("#file_itemImage"+id).focus();
         return;
       }
       else if(itemCustomize == ""){
@@ -438,15 +438,19 @@ export class CommonPageComponent implements OnInit {
       this.layout.warningSnackBar("Mobile length should be 10");
       return false;
     }
-    else if(this.restPincode.trim() !="" && this.restPincode.trim().length != 6){
-      this.layout.warningSnackBar("Pincode length should be 6");
+    else if(this.restPincode ==""){
+      this.layout.warningSnackBar("Enter Pincode");
       return false;
     }
+    // else if(this.restPincode.length != 6){
+    //   this.layout.warningSnackBar("Pincode length should be 6");
+    //   return false;
+    // }
     else if(this.restLatLong.trim() == ""){
       this.layout.warningSnackBar("Latlong should be fill");
       return false;
     }
-    else if(this.restCloseTime.trim() != "" && this.restOpenTime.trim() == ""){
+    else if(this.restCloseTime != "" && this.restOpenTime == ""){
       this.layout.warningSnackBar("Please select open time");
       return false;
     }

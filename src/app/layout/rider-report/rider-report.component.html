@@ -86,7 +86,7 @@
         <table class="table table-borderd table-striped table-hover my-table">
             <thead>
                 <tr>
-                    <th style="width: 120px;">Order Id</th>
+                    <th style="width: 80px;">Order Id</th>
                     <th>Order datetime</th>
                     <th>Restaurant</th>
                     <th>Customer</th>
@@ -94,7 +94,7 @@
                     <th style="width: 120px;" class="price-align">Grand Total</th>
                     <th style="width: 120px;">Payment Mode</th>
                     <th style="width: 120px;">Payment Type</th>
-                    <th style="width: 180px;">
+                    <th style="width: 120px;">
                         <label>
                             <input type="checkbox" id="check-all-Checkbox" (change)="checkAll()" *ngIf="totalReceiveAmount !=0"/>
                             Receive Status
@@ -186,6 +186,6 @@
 </div>
 <app-pagination *ngIf="searchDataList.length !=0" 
         [itemCount]="searchDataList.length" 
-        [perPageRecord]="10" 
+        [perPageRecord]="100" 
         [showPage]="10">
 </app-pagination>

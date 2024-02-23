@@ -14,6 +14,7 @@ import { ComplaintComponent } from './layout/complaint/complaint.component';
 import { PartnerReportComponent } from './layout/partner-report/partner-report.component';
 import { RiderReportComponent } from './layout/rider-report/rider-report.component';
 import { WipComponent } from './wip/wip.component';
+import { CustomerComponent } from './layout/customer/customer.component';
 
 const routes: Routes = [
   {path:'', redirectTo:'/login', pathMatch:'full'},
@@ -31,6 +32,7 @@ const routes: Routes = [
       {path:'partner-report', component:PartnerReportComponent},
       {path:'rider-report', component:RiderReportComponent},
       // {path:'report', component:ReportComponent},
+      {path:'customer', component:CustomerComponent},
       {path:'**', component:WipComponent},
     ]
   }

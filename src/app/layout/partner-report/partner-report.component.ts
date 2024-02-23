@@ -39,6 +39,10 @@ export class PartnerReportComponent implements OnInit {
     .pipe(take(1)).subscribe({
       next: result=>{
         this.restaurantList = result;
+        if(this.restaurantList.length !=0){
+          this.filterRestaurant = this.restaurantList[0].restId;
+          this.getPartnerReport();
+        }
       },
       error: _=>{
         this.layout.errorSnackBar(Constant.returnServerErrorMessage("allRestaurant"));

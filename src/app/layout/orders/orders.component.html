@@ -32,6 +32,7 @@
                     <th style="width: 130px;">Grand Total</th>
                     <th style="width: 150px;">Status</th>
                     <th>Order Datetime</th>
+                    <th></th>
                 </tr>
                 <tr>
                     <th>
@@ -62,11 +63,15 @@
                         <input type="text" class="form-control" placeholder="Order Datetime" [(ngModel)]="searchDatatime"
                         (keyup)="searchOrder($event)"/>
                     </th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let o of searchOrderList; let rowIndex = index" class="table-row data-{{rowIndex+1}}" (click)="getOrderItem(o)" title="Click to view details of {{o.orderId}} order id" style="cursor: pointer;">
-                    <td>{{o.orderId}}</td>
+                <tr *ngFor="let o of searchOrderList; let rowIndex = index" class="table-row data-{{rowIndex+1}}">
+                    <td (click)="getOrderItem(o)" title="Click to view details of {{o.orderId}} order id" style="cursor: pointer;">
+                        {{o.orderId}} &nbsp;
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                    </td>
                     <td>{{o.restName}}</td>
                     <td>{{o.custName}}</td>
                     <td>{{o.paymentMode}}</td>
@@ -77,15 +82,27 @@
                         <span [style.color]="o.statusColor">{{o.statusTxt}}</span>
                     </td>
                     <td>{{o.orderDatetime}}</td>
+                    <td>
+                        <i class="fa fa-trash" aria-hidden="true" *ngIf="o.status !=5" (click)="deleteOrder(o.orderId)"></i>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
 
+<div class="row" *ngIf="searchOrderList.length == 0">
+    <div class="col-md-12">
+        <h4 class="text-warning text-center">
+            <i class="fa fa-info-circle"></i> &nbsp;
+            <i>No record found</i>
+        </h4>
+    </div>
+</div>
+
 <app-pagination *ngIf="searchOrderList.length !=0" 
         [itemCount]="searchOrderList.length" 
-        [perPageRecord]="10" 
+        [perPageRecord]="100" 
         [showPage]="10">
 </app-pagination>
 

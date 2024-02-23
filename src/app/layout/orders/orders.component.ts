@@ -121,6 +121,31 @@ export class OrdersComponent implements OnInit {
     }
   }
 
+  deleteOrder(orderId:any){
+    let isConfirm = confirm("Do u want delete this order?");
+    if(!isConfirm){
+      return;
+    }
+    let jsonData = {
+      updateType:"deleteOrder",
+      orderId: orderId
+    }
+    this.sharedService.updateData(jsonData)
+    .pipe(take(1)).subscribe({
+      next: result=>{
+        if(result.code == Constant.SUCCESSFUL_STATUS_CODE){
+          this.getOrders();
+        }
+        this.layout.successSnackBar(result.message)
+        this.layout.spinnerHide();
+      },
+      error: _=>{
+        this.layout.errorSnackBar(Constant.returnServerErrorMessage("deleteOrder"));
+        this.layout.spinnerHide();
+      }
+    })
+  }
+
   openAnyModal(modalId:any){
     // $("#"+modalId).modal({
     //   backdrop : 'static',
