@@ -74,6 +74,7 @@ export class ComplaintComponent implements OnInit {
 
   searchId:any="";
   searchRaiseBy:any="";
+  searchMobile:any="";
   searchIssue:any="";
   searchRemark:any="";
   searchRaiseDate:any="";
@@ -85,6 +86,7 @@ export class ComplaintComponent implements OnInit {
         { 
           Id: any;
           RaiseBy: any;
+          Mobile: any;
           Issue:any;
           Remark:any;
           CreateDate:any;
@@ -93,6 +95,7 @@ export class ComplaintComponent implements OnInit {
       ) => 
       x.Id.trim().includes(this.searchId) && 
       x.RaiseBy.trim().toLowerCase().includes(this.searchRaiseBy.toLowerCase()) && 
+      x.Mobile.trim().toLowerCase().includes(this.searchMobile.toLowerCase()) && 
       x.Issue.trim().toLowerCase().includes(this.searchIssue.toLowerCase()) && 
       x.Remark.trim().toLowerCase().includes(this.searchRemark.toLowerCase()) && 
       x.CreateDate.trim().toLowerCase().includes(this.searchRaiseDate.toLowerCase()) && 

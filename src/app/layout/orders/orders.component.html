@@ -28,6 +28,7 @@
                     </th>
                     <th>Restaurant</th>
                     <th>Customer</th>
+                    <th>Primary Mobile</th>
                     <th style="width: 130px;">Payment Mode</th>
                     <th style="width: 130px;">Grand Total</th>
                     <th style="width: 150px;">Status</th>
@@ -45,6 +46,10 @@
                     </th>
                     <th>
                         <input type="text" class="form-control" placeholder="Customer" [(ngModel)]="searchCustomer"
+                        (keyup)="searchOrder($event)"/>
+                    </th>
+                    <th>
+                        <input type="text" class="form-control" placeholder="Primary Mobile" [(ngModel)]="searchPrimaryMobile"
                         (keyup)="searchOrder($event)"/>
                     </th>
                     <th>
@@ -74,6 +79,7 @@
                     </td>
                     <td>{{o.restName}}</td>
                     <td>{{o.custName}}</td>
+                    <td>{{o.primaryMobile}}</td>
                     <td>{{o.paymentMode}}</td>
                     <td class="price-align">
                         <i class="fa fa-inr" aria-hidden="true"></i> {{o.grandTotal}}

@@ -20,6 +20,7 @@
                 <tr>
                     <th style="width: 80px;">Id</th>
                     <th>Raise By</th>
+                    <th>Mobile</th>
                     <th>Issue</th>
                     <th>Remark</th>
                     <th>Raise Date</th>
@@ -32,6 +33,10 @@
                     </th>
                     <th>
                         <input type="text" class="form-control" placeholder="Raise By" [(ngModel)]="searchRaiseBy"
+                        (keyup)="searchComplaint()"/>
+                    </th>
+                    <th>
+                        <input type="text" class="form-control" placeholder="Mobile" [(ngModel)]="searchMobile"
                         (keyup)="searchComplaint()"/>
                     </th>
                     <th>
@@ -56,6 +61,7 @@
                 <tr *ngFor="let comp of searchComplaintList; let rowIndex = index" class="table-row data-{{rowIndex+1}}">
                     <td>{{comp.Id}}</td>
                     <td>{{comp.RaiseBy}}</td>
+                    <td>{{comp.Mobile}}</td>
                     <td>{{comp.Issue}}</td>
                     <td>{{comp.Remark}}</td>
                     <td>{{comp.CreateDate}}</td>

@@ -75,6 +75,7 @@ export class OrdersComponent implements OnInit {
   searchOrderId: any = "";
   searchRestaurant: any = "";
   searchCustomer: any = "";
+  searchPrimaryMobile: any = "";
   searchPaymentMode: any = "";
   searchGrandTotal: any = "";
   searchInstruction: any = "";
@@ -89,6 +90,7 @@ export class OrdersComponent implements OnInit {
           orderId: any; 
           restName: any;
           custName: any;
+          primaryMobile: any;
           paymentMode: any;
           grandTotal: any,
           statusTxt: any;
@@ -98,6 +100,7 @@ export class OrdersComponent implements OnInit {
       x.orderId.trim().includes(this.searchOrderId) && 
       x.restName.trim().toLowerCase().includes(this.searchRestaurant.toLowerCase()) && 
       x.custName.trim().toLowerCase().includes(this.searchCustomer.toLowerCase()) && 
+      x.primaryMobile.trim().toLowerCase().includes(this.searchPrimaryMobile.toLowerCase()) && 
       x.paymentMode.trim().toLowerCase().includes(this.searchPaymentMode.toLowerCase()) && 
       x.grandTotal.trim().toLowerCase().includes(this.searchGrandTotal.toLowerCase()) && 
       x.statusTxt.trim().toLowerCase().includes(this.searchStatus.toLowerCase()) && 
