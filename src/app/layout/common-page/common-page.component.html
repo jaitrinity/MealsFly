@@ -162,7 +162,7 @@
 			<div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <span class="text-warning">! {{imgInfo}}</span>
+                        <span class="text-warning">! {{itemImgInfo}}</span>
                     </div>
                 </div>
                 <div class="row">
@@ -199,7 +199,8 @@
                         <div class="row" *ngIf="!isOriginal">
                             <div class="col-md-4" *ngFor="let su of showEditUnit()">
                                 <label><i class="fa fa-inr" aria-hidden="true"></i> {{su}}</label>
-                                <input type="text" id="editUnit_{{su}}" class="form-control resetField" [OnlyNumberWithDecimal]="true"/>
+                                <input *ngIf="su != '1.5KG'" type="text" id="editUnit_{{su}}" class="form-control resetField" [OnlyNumberWithDecimal]="true"/>
+                                <input *ngIf="su == '1.5KG'" type="text" id="editUnit_1500Gram" class="form-control resetField" [OnlyNumberWithDecimal]="true"/>
                             </div>
                         </div>
                     </div>
@@ -225,7 +226,7 @@
 			<div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <span class="text-warning">! {{imgInfo}}</span>
+                        <span class="text-warning">! {{catAndRestImgInfo}}</span>
                     </div>
                 </div>
                 <div class="row">
@@ -367,7 +368,8 @@
                             <div class="row">
                                 <div class="col-md-4" *ngFor="let su of showUnit(item)">
                                     <label><i class="fa fa-inr" aria-hidden="true"></i> {{su}}</label>
-                                    <input type="text" class="form-control resetField" id="item{{su}}{{item}}" [OnlyNumberWithDecimal]="true"/>
+                                    <input *ngIf="su != '1.5KG'" type="text" class="form-control resetField" id="item{{su}}{{item}}" [OnlyNumberWithDecimal]="true"/>
+                                    <input *ngIf="su == '1.5KG'" type="text" class="form-control resetField" id="item1500Gram{{item}}" [OnlyNumberWithDecimal]="true"/>
                                 </div>
                             </div>
                         </div>
@@ -406,7 +408,7 @@
 			<div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <span class="text-warning">! {{imgInfo}}</span>
+                        <span class="text-warning">! {{catAndRestImgInfo}}</span>
                     </div>
                 </div>
                 <div class="row">

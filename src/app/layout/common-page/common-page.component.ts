@@ -17,7 +17,7 @@ export class CommonPageComponent implements OnInit {
   @ViewChild(PaginationComponent) myPagination: any;
   imgWidth: number = 0;
   imgHeight: number = 0; 
-  imgInfo: string = "";
+  catAndRestImgInfo: string = "";
   itemImgInfo: string = "Item width and height dimension must be equal";
   restDisplayOrder: number = 0;
   restId: any = "";
@@ -41,7 +41,7 @@ export class CommonPageComponent implements OnInit {
     private sharedService: SharedService){
       this.imgWidth = Constant.IMG_WIDTH;
       this.imgHeight = Constant.IMG_HEIGHT;
-      this.imgInfo = "Image dimension should be equal to ("+this.imgWidth+"x"+this.imgHeight+")px";
+      this.catAndRestImgInfo = "Image dimension should be equal to ("+this.imgWidth+"x"+this.imgHeight+")px";
     $(document).ready(function(){
       $('.turn').on('click', function(){
         var angle = ($('.viewImg').data('angle') + 90) || 90;
@@ -240,10 +240,13 @@ export class CommonPageComponent implements OnInit {
       for(let i=0;i<this.newEditUnitList.length;i++){
         let obj = this.newEditUnitList[i];
         let objVal = $("#editUnit_"+obj).val();
+        if(obj == "1.5KG"){
+          objVal = $("#editUnit_1500Gram").val();
+        }
         if(objVal.trim() != ""){
           let unitJson = {
             title: obj,
-            price: $("#editUnit_"+obj).val()
+            price: objVal
           }
           newUnitList.push(unitJson);
         } 
@@ -318,6 +321,9 @@ export class CommonPageComponent implements OnInit {
       for(let j=0;j<unitList.length;j++){
         let unit = unitList[j];
         let itemData = $("#item"+unit+""+id).val();
+        if(unit == "1.5KG"){
+          itemData = $("#item1500Gram"+id).val();
+        }
         if(itemData.trim() == ""){
          
         }

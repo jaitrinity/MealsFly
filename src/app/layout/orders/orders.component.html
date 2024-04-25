@@ -29,6 +29,9 @@
                     <th>Restaurant</th>
                     <th>Customer</th>
                     <th>Primary Mobile</th>
+                    <!-- <th>Rider Name</th>
+                    <th>Rider Mobile</th> -->
+                    <th>Rider</th>
                     <th style="width: 130px;">Payment Mode</th>
                     <th style="width: 130px;">Grand Total</th>
                     <th style="width: 150px;">Status</th>
@@ -50,6 +53,18 @@
                     </th>
                     <th>
                         <input type="text" class="form-control" placeholder="Primary Mobile" [(ngModel)]="searchPrimaryMobile"
+                        (keyup)="searchOrder($event)"/>
+                    </th>
+                    <!-- <th>
+                        <input type="text" class="form-control" placeholder="Rider Name" [(ngModel)]="searchRiderName"
+                        (keyup)="searchOrder($event)"/>
+                    </th>
+                    <th>
+                        <input type="text" class="form-control" placeholder="Rider Mobile" [(ngModel)]="searchRiderMobile"
+                        (keyup)="searchOrder($event)"/>
+                    </th> -->
+                    <th>
+                        <input type="text" class="form-control" placeholder="Rider" [(ngModel)]="searchRider"
                         (keyup)="searchOrder($event)"/>
                     </th>
                     <th>
@@ -80,6 +95,9 @@
                     <td>{{o.restName}}</td>
                     <td>{{o.custName}}</td>
                     <td>{{o.primaryMobile}}</td>
+                    <!-- <td>{{o.riderName}}</td>
+                    <td>{{o.riderMobile}}</td> -->
+                    <td>{{o.riderInfo}}</td>
                     <td>{{o.paymentMode}}</td>
                     <td class="price-align">
                         <i class="fa fa-inr" aria-hidden="true"></i> {{o.grandTotal}}
@@ -135,6 +153,18 @@
                     <div class="col-md-10">
                         {{viewOrderObj.deliveryAddress}}
                     </div>
+                    <div *ngIf="viewOrderObj.riderId == 0;else other_content"></div>
+                    <ng-template #other_content>
+                        <div class="col-md-12 tx-bold">
+                            Rider Info
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">Name: {{viewOrderObj.riderName}}</div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">Mobile: 
+                            <a href="tel:{{viewOrderObj.riderMobile}}">{{viewOrderObj.riderMobile}}</a>
+                        </div>
+                    </ng-template>
                     <div class="col-md-12 tx-bold">
                         Order Status
                     </div>

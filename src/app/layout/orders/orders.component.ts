@@ -76,6 +76,9 @@ export class OrdersComponent implements OnInit {
   searchRestaurant: any = "";
   searchCustomer: any = "";
   searchPrimaryMobile: any = "";
+  // searchRiderName: any = "";
+  // searchRiderMobile: any = "";
+  searchRider: any = "";
   searchPaymentMode: any = "";
   searchGrandTotal: any = "";
   searchInstruction: any = "";
@@ -91,6 +94,9 @@ export class OrdersComponent implements OnInit {
           restName: any;
           custName: any;
           primaryMobile: any;
+          // riderName: any;
+          // riderMobile: any;
+          riderInfo: any;
           paymentMode: any;
           grandTotal: any,
           statusTxt: any;
@@ -101,6 +107,9 @@ export class OrdersComponent implements OnInit {
       x.restName.trim().toLowerCase().includes(this.searchRestaurant.toLowerCase()) && 
       x.custName.trim().toLowerCase().includes(this.searchCustomer.toLowerCase()) && 
       x.primaryMobile.trim().toLowerCase().includes(this.searchPrimaryMobile.toLowerCase()) && 
+      // x.riderName.trim().toLowerCase().includes(this.searchRiderName.toLowerCase()) && 
+      // x.riderMobile.trim().toLowerCase().includes(this.searchRiderMobile.toLowerCase()) && 
+      x.riderInfo.trim().toLowerCase().includes(this.searchRider.toLowerCase()) && 
       x.paymentMode.trim().toLowerCase().includes(this.searchPaymentMode.toLowerCase()) && 
       x.grandTotal.trim().toLowerCase().includes(this.searchGrandTotal.toLowerCase()) && 
       x.statusTxt.trim().toLowerCase().includes(this.searchStatus.toLowerCase()) && 
