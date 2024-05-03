@@ -121,8 +121,8 @@ export class OrdersComponent implements OnInit {
 
   exportOrder(){
     if(this.searchOrderList.length != 0 ){
-      let columnKeyArr:any = ["orderId","restName","custName","paymentMode","instruction","grandTotal","statusTxt","orderDatetime"];
-      let columnTitleArr:any = ["Order Id","Restaurant","Customer","Payment Mode","Instruction","Grand Total","Status","Order Date"];
+      let columnKeyArr:any = ["orderId","restName","custName","primaryMobile","riderInfo","paymentMode","instruction","grandTotal","statusTxt","orderDatetime"];
+      let columnTitleArr:any = ["Order Id","Restaurant","Customer","Primary Mobile","Rider","Payment Mode","Instruction","Grand Total","Status","Order Date"];
       CommonFunction.downloadFile(this.searchOrderList,
         'Order_Report.csv', 
         columnKeyArr, 

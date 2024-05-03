@@ -226,7 +226,7 @@
 			<div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <span class="text-warning">! {{catAndRestImgInfo}}</span>
+                        <span class="text-warning">! {{restImgInfo}}</span>
                     </div>
                 </div>
                 <div class="row">
@@ -408,7 +408,7 @@
 			<div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <span class="text-warning">! {{catAndRestImgInfo}}</span>
+                        <span class="text-warning">! {{catImgInfo}}</span>
                     </div>
                 </div>
                 <div class="row">
@@ -420,7 +420,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <label>Image *</label>
-                        <input type="file" id="file_catImage" accept=".jpg,.jpeg,.png" (change)="changeListener($event,0)" class="form-control resetField" />
+                        <input type="file" id="file_catImage" accept=".jpg,.jpeg,.png" (change)="changeListener($event,'catImage')" class="form-control resetField" />
                         <input type="hidden" [(ngModel)]="catImageBase64" class="form-control resetField"/>
                     </div>
                 </div>

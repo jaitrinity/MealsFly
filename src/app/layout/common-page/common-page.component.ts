@@ -17,7 +17,8 @@ export class CommonPageComponent implements OnInit {
   @ViewChild(PaginationComponent) myPagination: any;
   imgWidth: number = 0;
   imgHeight: number = 0; 
-  catAndRestImgInfo: string = "";
+  restImgInfo: string = "";
+  catImgInfo: string = "Category image width and height dimension must be equal";
   itemImgInfo: string = "Item width and height dimension must be equal";
   restDisplayOrder: number = 0;
   restId: any = "";
@@ -41,7 +42,7 @@ export class CommonPageComponent implements OnInit {
     private sharedService: SharedService){
       this.imgWidth = Constant.IMG_WIDTH;
       this.imgHeight = Constant.IMG_HEIGHT;
-      this.catAndRestImgInfo = "Image dimension should be equal to ("+this.imgWidth+"x"+this.imgHeight+")px";
+      this.restImgInfo = "Image dimension should be equal to ("+this.imgWidth+"x"+this.imgHeight+")px";
     $(document).ready(function(){
       $('.turn').on('click', function(){
         var angle = ($('.viewImg').data('angle') + 90) || 90;
@@ -524,16 +525,17 @@ export class CommonPageComponent implements OnInit {
         const width = img.width;
         const height = img.height;
 
-        if((imageId == 0 || imageId == "restImage" || imageId == "restBanner") && 
+        if(imageId == "catImage" && width != height){
+          this.catImageBase64 = "";
+          $("#file_catImage").val("");
+          alert('Width('+width+') and Height('+height+') dimensions must be equal');
+        }
+
+        else if((imageId == "restImage" || imageId == "restBanner") && 
         (width != this.imgWidth || height != this.imgHeight)
         ){
           let type = "";
-          if(imageId == 0){
-            this.catImageBase64 = "";
-            $("#file_catImage").val("");
-            type = "Category img ";
-          }
-          else if(imageId == "restImage"){
+          if(imageId == "restImage"){
             this.restImageBase64 = "";
             $("#restImageBase64").val("");
             type = "Restaurant img ";
@@ -587,7 +589,7 @@ export class CommonPageComponent implements OnInit {
       else if(imageId == "editItemImage"){
         this.editItemImageBase64 = image;
       }
-      else if(imageId == 0){
+      else if(imageId == "catImage"){
         this.catImageBase64 = image;
       }
       else{
