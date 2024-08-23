@@ -90,6 +90,10 @@ export class PartnerReportComponent implements OnInit {
   searchPaymentAmount:any="";
   searchPaymentStatus:any="";
   searchOrder(evt:any){
+    this.checkedAmount = 0;
+    $(".order-pay").prop("checked",false);
+    $("#check-all-Checkbox").prop("checked",false);
+    this.checkedData = [];
     this.searchDataList = this.dataList.filter
     (
       (x: 

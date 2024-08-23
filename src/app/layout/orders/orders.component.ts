@@ -14,13 +14,17 @@ declare var $: any;
 })
 export class OrdersComponent implements OnInit {
   @ViewChild(PaginationComponent) myPagination: any;
+  loginEmpRoleId: any = "";
   filterStartDate: any = "";
   filterEndDate: any = ""
   orderList: any = [];
+  columnName: any = [];
+  columnData: any = [];
   searchOrderList: any = [];
   orderItemList: any = [];
   constructor(private sharedService: SharedService,private layout:LayoutComponent){
     layout.setPageTitle("Order");
+    this.loginEmpRoleId = localStorage.getItem("loginEmpRoleId");
   }
   ngOnInit(): void {
     this.getOrders();
@@ -36,7 +40,9 @@ export class OrdersComponent implements OnInit {
     this.sharedService.getAllList(jsonData)
     .pipe(take(1)).subscribe({
       next: result=>{
-        this.orderList = result;
+        this.orderList = result.orderList;
+        this.columnName = result.columnName;
+        this.columnData = result.columnData;
         this.searchOrderList = this.orderList;
         this.layout.spinnerHide();
         this.searchOrder("");
@@ -51,6 +57,10 @@ export class OrdersComponent implements OnInit {
   viewOrderId: any;
   viewOrderObj:any = {};
   getOrderItem(orderObj:any){
+    this.deleteItemArr = [];
+    this.newTotalPrice = 0;
+    this.newGrandTotal = 0;
+    this.editCount = 0;
     this.viewOrderObj = orderObj;
     this.viewOrderId = orderObj.orderId;
     let jsonData = {
@@ -153,6 +163,128 @@ export class OrdersComponent implements OnInit {
       },
       error: _=>{
         this.layout.errorSnackBar(Constant.returnServerErrorMessage("deleteOrder"));
+        this.layout.spinnerHide();
+      }
+    })
+  }
+
+  createRange(number: any){
+    var items: number[] = [];
+    number *= 10;
+    for(var i = 1; i <= number; i++){
+       items.push(i);
+    }
+    return items;
+  }
+
+  editCount = 0;
+  editAny(notEdit:any,edit:any,orderItemObj:any){
+    let orderItemId = orderItemObj.orderItemId;
+    $("."+notEdit+"-"+orderItemId).hide();
+    $("."+edit+"-"+orderItemId).show();
+    this.editCount++;
+  }
+  cancelAny(edit:any,notEdit:any,orderItemObj:any){
+    let orderItemId = orderItemObj.orderItemId;
+    $("."+edit+"-"+orderItemId).hide();
+    $("."+notEdit+"-"+orderItemId).show();
+    this.editCount--;
+  }
+
+  newTotalPrice : any = 0;
+  newGrandTotal : any = 0;
+  changeItemQty(evt: any, orderItemObj:any){
+    let newQty = evt.target.value;
+    // let orderItemId = orderItemObj.orderItemId;
+    let perUnitPrice = orderItemObj.perUnitPrice;
+
+    orderItemObj.newQuantity = newQty;
+    let newItemPrice = parseInt(perUnitPrice) * parseInt(newQty);
+    orderItemObj.price = newItemPrice;
+    // $("#newItemPrice"+"-"+orderItemId).val(newItemPrice);
+
+    this.newTotalPrice = 0;
+    this.newGrandTotal = 0;
+    for(let i=0;i<this.orderItemList.length;i++){
+      let orderItemObj = this.orderItemList[i];
+      // let orderItemId = orderItemObj.orderItemId;
+      // let newItemPrice = $("#newItemPrice"+"-"+orderItemId).val();
+      let newItemPrice = orderItemObj.price;
+      this.newTotalPrice += parseInt(newItemPrice) ;
+    }
+
+    let deliveryCharge = this.viewOrderObj.deliveryCharge;
+    this.newGrandTotal = this.newTotalPrice + parseInt(deliveryCharge)
+  }
+
+  editOrderItem(){
+    let jsonData = {
+      updateType: 'updateOrderItem',
+      orderId: this.viewOrderId,
+      totalPrice: this.newTotalPrice,
+      grandTotal: this.newGrandTotal,
+      orderItemList: this.orderItemList
+    }
+    // console.log(JSON.stringify(jsonData));
+    this.sharedService.updateData(jsonData)
+    .pipe(take(1)).subscribe({
+      next: result=>{
+        if(result.code == Constant.SUCCESSFUL_STATUS_CODE){
+          this.closeAnyModal("viewOrderModal");
+          this.getOrders();
+        }
+        this.layout.successSnackBar(result.message)
+        this.layout.spinnerHide();
+      },
+      error: _=>{
+        this.layout.errorSnackBar(Constant.returnServerErrorMessage("editOrderItem"));
+        this.layout.spinnerHide();
+      }
+    })
+  }
+
+  deleteItemArr: any = [];
+  deleteItemPrice: any = 0;
+  checkDeleteOrderItem(evt: any, orderItemObj:any){
+    let isChecked = evt.target.checked;
+    let orderItemId = orderItemObj.orderItemId;
+    let price = orderItemObj.price;
+    let index = this.deleteItemArr.indexOf(orderItemId);
+    if(isChecked){
+      this.deleteItemArr.push(orderItemId);
+      this.deleteItemPrice =  this.deleteItemPrice + parseInt(price);
+    }
+    else{
+      this.deleteItemArr.splice(index, 1);
+      this.deleteItemPrice =  this.deleteItemPrice - parseInt(price);
+    }
+    // console.log(this.deleteItemArr) 
+  }
+  
+  deleteOrderItem(){
+    let isConfirm = confirm("Do u want delete checked order item?");
+    if(!isConfirm){
+      return;
+    }
+    let jsonData = {
+      updateType: 'deleteOrderItem',
+      orderId: this.viewOrderId,
+      deleteItemPrice: this.deleteItemPrice,
+      deleteItemArr: this.deleteItemArr
+    }
+    // console.log(JSON.stringify(jsonData))
+    this.sharedService.updateData(jsonData)
+    .pipe(take(1)).subscribe({
+      next: result=>{
+        if(result.code == Constant.SUCCESSFUL_STATUS_CODE){
+          this.closeAnyModal("viewOrderModal");
+          this.getOrders();
+        }
+        this.layout.successSnackBar(result.message)
+        this.layout.spinnerHide();
+      },
+      error: _=>{
+        this.layout.errorSnackBar(Constant.returnServerErrorMessage("deleteOrderItem"));
         this.layout.spinnerHide();
       }
     })

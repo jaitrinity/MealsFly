@@ -15,6 +15,7 @@ import { PartnerReportComponent } from './layout/partner-report/partner-report.c
 import { RiderReportComponent } from './layout/rider-report/rider-report.component';
 import { WipComponent } from './wip/wip.component';
 import { CustomerComponent } from './layout/customer/customer.component';
+import { RevenueComponent } from './layout/revenue/revenue.component';
 
 const routes: Routes = [
   {path:'', redirectTo:'/login', pathMatch:'full'},
@@ -33,6 +34,7 @@ const routes: Routes = [
       {path:'rider-report', component:RiderReportComponent},
       // {path:'report', component:ReportComponent},
       {path:'customer', component:CustomerComponent},
+      {path:'revenue', component:RevenueComponent},
       {path:'**', component:WipComponent},
     ]
   }

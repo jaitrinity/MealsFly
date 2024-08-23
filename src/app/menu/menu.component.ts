@@ -8,10 +8,11 @@ import { take } from 'rxjs';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
+  loginEmpRoleId: any = "";
   menuList: any = [];
   restMenuList: any = [];
   constructor(private sharedService: SharedService){
-
+    this.loginEmpRoleId = localStorage.getItem("loginEmpRoleId");
   }
   ngOnInit(): void {
     this.getMenuList();
@@ -21,6 +22,7 @@ export class MenuComponent implements OnInit {
   getMenuList(){
     let jsonData = {
       searchType: "menuList",
+      loginEmpRoleId: this.loginEmpRoleId
     }
     this.sharedService.getAllList(jsonData)
     .pipe(take(1)).subscribe({

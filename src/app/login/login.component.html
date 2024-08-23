@@ -13,12 +13,16 @@
             <br>
             <div class="col-md-12">
                 <label class="text-mealsfly-red">Password</label>
-                <input type="password" [(ngModel)]="loginModel.password" placeholder="Password" required 
+                <input [type]="isShow ? 'text' : 'password'" [(ngModel)]="loginModel.password" placeholder="Password" required 
                 class="form-control" name="password"/>
+                <label>
+                    <input type="checkbox" (change)="isShow = !isShow"/> &nbsp;
+                    <i [class]="isShow ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                </label>
             </div>
             <br>
             <div class="col-md-12">
-                <button class="btn btn-sm btn-default" [disabled]='loginForm.form.invalid' [class.activebutton]='!loginForm.form.invalid'>Login</button>
+                <button class="btn btn-sm btn-default" style="background-color: #00af50;color: white;" [disabled]='loginForm.form.invalid' [class.activebutton]='!loginForm.form.invalid'>Login</button>
             </div>
         </form>
     </div>

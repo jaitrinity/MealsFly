@@ -25,7 +25,7 @@
     </div>
 </div>
 <br>
-<div class="row" *ngIf="searchDataList.length != 0">
+<div class="row">
     <div class="col-md-4">
         <table class="table table-borderd table-striped table-hover my-table">
             <thead>
@@ -81,7 +81,7 @@
         </table>
     </div>
 </div>
-<div class="row" *ngIf="searchDataList.length != 0">
+<div class="row">
     <div class="col-md-12">
         <table class="table table-borderd table-striped table-hover my-table">
             <thead>
@@ -99,6 +99,28 @@
                             <input type="checkbox" id="check-all-Checkbox" (change)="checkAll()" *ngIf="totalReceiveAmount !=0"/>
                             Receive Status
                         </label>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="4"></th>
+                    <th colspan="2">
+                        <select class="form-control" [(ngModel)]="searchPaymentType" (change)="searchOrder($event)">
+                            <option value="">Payment Type</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Online">Online</option>
+                        </select>
+                    </th>
+                    <th colspan="2">
+                        <select class="form-control" [(ngModel)]="searchReceiveStatus" (change)="searchOrder($event)">
+                            <option value="">Receive Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Received">Received</option>
+                        </select>
+                    </th>
+                    <th>
+                        <button *ngIf="checkedAmount != 0" class="btn btn-sm btn-danger" (click)="receiveAmount()">
+                            <i class="fa fa-inr" aria-hidden="true"></i> {{checkedAmount}}
+                        </button>
                     </th>
                 </tr>
                 <tr *ngIf="false">
@@ -156,20 +178,12 @@
                     <td>{{o.paymentTypeTxt}}</td>
                     <td>
                         <label>
-                            <input type="checkbox" (change)="changePayment(o)" id="order-pay-{{o.orderId}}" 
+                            <input type="checkbox" (change)="changePayment(o)" class="order-pay" id="order-pay-{{o.orderId}}" 
                             *ngIf="o.receiveStatus == 'Pending' && o.status == 5"/>
                             <span [ngClass]="{'text-mealsfly-green' : o.receiveStatus == 'Received'}">
                                 {{o.receiveStatus}}
                             </span>
                         </label>
-                    </td>
-                </tr>
-                <tr *ngIf="checkedAmount != 0">
-                    <td colspan="8"></td>
-                    <td>
-                        <button class="btn btn-sm btn-danger" (click)="receiveAmount()">
-                            <i class="fa fa-inr" aria-hidden="true"></i> {{checkedAmount}} Receive
-                        </button>
                     </td>
                 </tr>
             </tbody>

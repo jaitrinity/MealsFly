@@ -17,6 +17,22 @@
     </div>
 </div>
 <br>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-borderd table-striped table-hover my-table">
+            <thead>
+                <tr>
+                    <th *ngFor="let cn of columnName" style="text-align: center;">{{cn}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td *ngFor="let cd of columnData" style="text-align: center;">{{cd}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-12">
@@ -36,7 +52,7 @@
                     <th style="width: 130px;">Grand Total</th>
                     <th style="width: 150px;">Status</th>
                     <th>Order Datetime</th>
-                    <th></th>
+                    <th *ngIf="loginEmpRoleId === '1'"></th>
                 </tr>
                 <tr>
                     <th>
@@ -83,7 +99,7 @@
                         <input type="text" class="form-control" placeholder="Order Datetime" [(ngModel)]="searchDatatime"
                         (keyup)="searchOrder($event)"/>
                     </th>
-                    <th></th>
+                    <th *ngIf="loginEmpRoleId === '1'"></th>
                 </tr>
             </thead>
             <tbody>
@@ -106,7 +122,7 @@
                         <span [style.color]="o.statusColor">{{o.statusTxt}}</span>
                     </td>
                     <td>{{o.orderDatetime}}</td>
-                    <td>
+                    <td *ngIf="loginEmpRoleId === '1'">
                         <i class="fa fa-trash" aria-hidden="true" *ngIf="o.status !=5" (click)="deleteOrder(o.orderId)"></i>
                     </td>
                 </tr>
@@ -130,8 +146,8 @@
         [showPage]="10">
 </app-pagination>
 
-<div id="viewOrderModal" class="modal fade" role="dialog">
-	<div class="modal-dialog modal-sm" >
+<div id="viewOrderModal" data-keyboard="false" data-bs-backdrop="static" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-md" >
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 5px !important;">
 				<h6 class="modal-title">Order : {{viewOrderId}} </h6>
@@ -198,14 +214,35 @@
                         <tbody>
                             <tr *ngFor="let orderItem of orderItemList">
                                 <td>
-                                    {{orderItem.itemName}} / 
-                                    {{orderItem.size}} * {{orderItem.quantity}}
+                                    <div class="nonEdit-{{orderItem.orderItemId}}">
+                                        {{orderItem.itemName}} / 
+                                        {{orderItem.size}} * {{orderItem.quantity}}
+                                        &nbsp;<i (click)="editAny('nonEdit','edit',orderItem)" title="Edit Item" class="fa fa-pencil" aria-hidden="true"></i>
+                                        &nbsp; | &nbsp;
+                                        <label>
+                                            <input type="checkbox" (click)="checkDeleteOrderItem($event, orderItem)"/> &nbsp; <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </label>
+                                        
+                                    </div>
+                                    <div class="edit edit-{{orderItem.orderItemId}}">
+                                        {{orderItem.itemName}} / 
+                                        {{orderItem.size}} * 
+                                        <select (change)="changeItemQty($event, orderItem)">
+                                            <option [value]="c" *ngFor="let c of createRange(orderItem.quantity)" [selected]="c == orderItem.quantity">{{c}}</option>
+                                        </select>
+                                        <!-- &nbsp;<i (click)="dis(1,rest)" class="fa fa-floppy-o" aria-hidden="true"></i> -->
+                                        &nbsp;<i (click)="cancelAny('edit','nonEdit',orderItem)" class="fa fa-times-circle" aria-hidden="true"></i>
+                                    </div>
                                 </td>
                                 <td>
                                     <div style="text-align: right;">
                                         <i class="fa fa-inr" aria-hidden="true"></i>
                                         {{orderItem.price}}
                                     </div>
+                                    <!-- <div class="edit edit-{{orderItem.orderItemId}}" style="text-align: right;">
+                                        <i class="fa fa-inr" aria-hidden="true"></i>
+                                        &nbsp; <input type="text" [readonly]=true id="newItemPrice-{{orderItem.orderItemId}}" [value]="orderItem.price" style="width: 50px;"/>
+                                    </div> -->
                                 </td>
                             </tr>
                         </tbody>
@@ -218,7 +255,13 @@
                             <td>
                                 <div style="text-align: right;">
                                     <i class="fa fa-inr" aria-hidden="true"></i>
-                                    {{viewOrderObj.totalPrice}}
+                                    <span *ngIf="newTotalPrice == 0; else totalPrice">
+                                        {{viewOrderObj.totalPrice}}
+                                    </span>
+                                    <ng-template #totalPrice>
+                                        {{newTotalPrice}}
+                                    </ng-template>
+                                    
                                 </div>
                             </td>
                         </tr>
@@ -236,12 +279,21 @@
                             <td>
                                 <div style="text-align: right;">
                                     <i class="fa fa-inr" aria-hidden="true"></i>
-                                    {{viewOrderObj.grandTotal}}
+                                    <span *ngIf="newGrandTotal == 0; else grandTotal">
+                                        {{viewOrderObj.grandTotal}}
+                                    </span>
+                                    <ng-template #grandTotal>
+                                        {{newGrandTotal}}
+                                    </ng-template>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                <div style="text-align: right;">
+                    <button *ngIf="editCount != 0" class="btn btn-sm btn-info text-white" (click)="editOrderItem()">Save</button>
+                    <button *ngIf="deleteItemArr.length != 0" class="btn btn-sm btn-danger text-white" (click)="deleteOrderItem()">Delete</button>
+                </div>
                     
                 
 

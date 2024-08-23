@@ -31,6 +31,7 @@ import { PartnerReportComponent } from './layout/partner-report/partner-report.c
 import { RiderReportComponent } from './layout/rider-report/rider-report.component';
 import { WipComponent } from './wip/wip.component';
 import { CustomerComponent } from './layout/customer/customer.component';
+import { RevenueComponent } from './layout/revenue/revenue.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { CustomerComponent } from './layout/customer/customer.component';
     PartnerReportComponent,
     RiderReportComponent,
     WipComponent,
-    CustomerComponent
+    CustomerComponent,
+    RevenueComponent
   ],
   imports: [
     BrowserModule,

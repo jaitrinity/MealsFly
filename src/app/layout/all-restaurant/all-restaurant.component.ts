@@ -16,20 +16,37 @@ declare var $: any;
 })
 export class AllRestaurantComponent implements OnInit {
   @ViewChild(PaginationComponent) myPagination: any;
+  imgWidth: number = 0;
+  imgHeight: number = 0; 
+  restImgInfo: string = "";
+  restName: any = "";
+  restMobile: any = "";
+  restAddress: any = "";
+  restPincode: any = "";
+  restLatLong: any = "";
+  restOpenTime: any = "";
+  restCloseTime: any = "";
+  restImage: any = "";
+  restBanner: any = "";
+
   restList:any = [];
   searchRestList:any = [];
+  restPincodeList:any = [];
+  // filterPincode: any = "";
   constructor(private sharedService: SharedService, 
     private layout: LayoutComponent,
-    private router: Router
-    ){
-    layout.setPageTitle("Restaurants")
-    $(document).ready(function(){
-      $('.turn').on('click', function(){
-        var angle = ($('.viewImg').data('angle') + 90) || 90;
-        $('.viewImg').css({'transform': 'rotate(' + angle + 'deg)'});
-        $('.viewImg').data('angle', angle);
-      });
-    })
+    private router: Router){
+      layout.setPageTitle("Restaurants")
+      $(document).ready(function(){
+        $('.turn').on('click', function(){
+          var angle = ($('.viewImg').data('angle') + 90) || 90;
+          $('.viewImg').css({'transform': 'rotate(' + angle + 'deg)'});
+          $('.viewImg').data('angle', angle);
+        });
+      })
+      this.imgWidth = Constant.IMG_WIDTH;
+      this.imgHeight = Constant.IMG_HEIGHT;
+      this.restImgInfo = "Image dimension should be equal to ("+this.imgWidth+"x"+this.imgHeight+")px";
   }
 
   ngOnInit(): void {
@@ -44,8 +61,9 @@ export class AllRestaurantComponent implements OnInit {
     this.sharedService.getAllList(jsonData)
     .pipe(take(1)).subscribe({
       next: result=>{
-        this.restList = result;
+        this.restList = result.restList;
         this.searchRestList = this.restList;
+        this.restPincodeList = result.restPincodeList;
         this.layout.spinnerHide();
 
         this.searchRestaurant("");
@@ -75,7 +93,10 @@ export class AllRestaurantComponent implements OnInit {
     this.router.navigate(['/layout/rest-menu/'+restId]);
   }
 
-  dis(type:any,restId:any,oldPriority:any){
+  dis(type:any,restObj:any){
+    let restId = restObj.restId;
+    let oldPriority = restObj.displayOrder;
+    let pincode = restObj.pincode;
     if(type == 0){
       $("#label-"+restId).hide();
       $("#text-"+restId).show();
@@ -83,13 +104,20 @@ export class AllRestaurantComponent implements OnInit {
     }
     else if(type == 1){
       let newPriority = $("#new-"+restId).val();
-      let searchData = this.searchRestList.filter((x: { displayOrder: any; }) => x.displayOrder == newPriority);
+      let searchData = this.searchRestList.filter((x: 
+        { 
+          pincode: any;
+          displayOrder: any; 
+        }) => 
+          x.pincode == pincode &&
+          x.displayOrder == newPriority
+        );
       
       if(oldPriority == newPriority){
         this.layout.warningSnackBar("old and new priority should be different");
       }
       else if(searchData.length !=0){
-        this.layout.warningSnackBar(newPriority+" priority already available to other restaurant");
+        this.layout.warningSnackBar(newPriority+" priority already available to other same pincode restaurant");
       }
       else{
         this.changeRestPriority(restId,newPriority);
@@ -124,6 +152,20 @@ export class AllRestaurantComponent implements OnInit {
     })
   }
 
+  // filterRestaurant(){
+  //   this.searchRestList = this.restList.filter
+  //   (
+  //     (x: 
+  //       { 
+  //         pincode: any
+  //       }
+  //     ) => 
+  //     x.pincode == this.filterPincode
+  //   );
+  //   this.myPagination.itemCount = this.searchRestList.length;
+  //   this.myPagination.createPagination();
+  // }
+
   searchRestId: any="";
   searchRestName: any="";
   searchRestMobile: any="";
@@ -131,6 +173,7 @@ export class AllRestaurantComponent implements OnInit {
   searchRestApprove: any="";
   searchRestEnable: any="";
   searchRestStatus: any="";
+  searchRestPincode: any="";
   searchRestaurant(evt:any){
     this.searchRestList = this.restList.filter
     (
@@ -139,13 +182,15 @@ export class AllRestaurantComponent implements OnInit {
           displayOrder: any;
           name: any;
           status:any;
-          enableTxt:any
+          enableTxt:any;
+          pincode:any;
         }
       ) => 
       x.displayOrder.trim().includes(this.searchRestPriority) && 
       x.name.trim().toLowerCase().includes(this.searchRestName.toLowerCase()) && 
       x.status.trim().toLowerCase().includes(this.searchRestStatus.toLowerCase()) && 
-      x.enableTxt.trim().toLowerCase().includes(this.searchRestEnable.toLowerCase())
+      x.enableTxt.trim().toLowerCase().includes(this.searchRestEnable.toLowerCase()) && 
+      x.pincode.trim().toLowerCase().includes(this.searchRestPincode.toLowerCase())
     );
     this.myPagination.itemCount = this.searchRestList.length;
     this.myPagination.createPagination();
@@ -195,6 +240,158 @@ export class AllRestaurantComponent implements OnInit {
     else{
       alert("No data for export");
     }
+  }
+
+  restImageBase64: any="";
+  restBannerBase64: any="";
+  changeListener($event:any, imageId:any):void{
+    const selectedFile = $event.target.files[0];
+    if (selectedFile) {
+      this.checkImageDimensions(selectedFile,imageId);
+    }
+  }
+
+  checkImageDimensions(file: File, imageId:any) {
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+      const img = new Image();
+      img.src = e.target.result;
+
+      img.onload = () => {
+        const width = img.width;
+        const height = img.height;
+
+        if((imageId == "restImage" || imageId == "restBanner") && 
+        (width != this.imgWidth || height != this.imgHeight)
+        ){
+          let type = "";
+          if(imageId == "restImage"){
+            this.restImageBase64 = "";
+            $("#restImageBase64").val("");
+            type = "Restaurant img ";
+          }
+          else if(imageId == "restBanner"){
+            this.restBannerBase64 = "";
+            $("#restBannerBase64").val("");
+            type = "Restaurant banner ";
+          }
+          alert(type+'dimensions must be equal to ('+this.imgWidth+'x'+this.imgHeight+')px.');
+        }
+        else{
+          this.uploadImage(file,imageId);
+        }
+      };
+    };
+    reader.readAsDataURL(file);
+  }
+
+  uploadImage(file: File, imageId: any){
+    let wrongFile = false;
+    let fileName = file.name;
+    if(!(fileName.indexOf(".jpg") > -1 || fileName.indexOf(".jpeg") > -1 || 
+    fileName.indexOf(".png") > -1)){
+      this.layout.warningSnackBar("only .jpg, .jpeg, .png format accepted, please choose right file.");
+      wrongFile = true;
+    }
+    var myReader: FileReader = new FileReader();
+
+    myReader.onloadend = (e) => {
+      let image = myReader.result;
+      if(imageId == "restImage"){
+        this.restImageBase64 = image;
+      }
+      else if(imageId == "restBanner"){
+        this.restBannerBase64 = image
+      }
+      
+      if(wrongFile){
+        this.restImageBase64 = "";
+        this.restBannerBase64 = "";
+      }
+    }
+    myReader.readAsDataURL(file);
+  }
+
+  validateRestData() : any{
+    if(this.restName.trim() == ""){
+      this.layout.warningSnackBar("Enter name");
+      return false;
+    }
+    else if(this.restMobile.trim() == ""){
+      this.layout.warningSnackBar("Enter mobile");
+      return false;
+    }
+    else if(this.restMobile.length != 10){
+      this.layout.warningSnackBar("Mobile length should be 10");
+      return false;
+    }
+    else if(this.restPincode ==""){
+      this.layout.warningSnackBar("Enter Pincode");
+      return false;
+    }
+    // else if(this.restPincode.length != 6){
+    //   this.layout.warningSnackBar("Pincode length should be 6");
+    //   return false;
+    // }
+    else if(this.restLatLong.trim() == ""){
+      this.layout.warningSnackBar("Latlong should be fill");
+      return false;
+    }
+    else if(this.restCloseTime != "" && this.restOpenTime == ""){
+      this.layout.warningSnackBar("Please select open time");
+      return false;
+    }
+    else if(!this.checkCloseTime()){
+      return false;
+    }
+    return true;
+  }
+
+  checkCloseTime():any{
+    let openTime:any = new Date("2023-11-17 "+this.restOpenTime);
+    let closeTime:any = new Date("2023-11-17 "+this.restCloseTime);
+    let diff = closeTime - openTime;
+    // console.log(openTime+" : "+closeTime+" : "+diff)
+    if(diff < 0){
+      this.layout.warningSnackBar("Close time should be greater than to open time");
+      return false;
+    }
+    return true;
+  }
+
+  saveRestaurant(){
+    if(!this.validateRestData()){
+      return;
+    }
+    let jsonData = {
+      insertType: "restaurant",
+      name: this.restName,
+      mobile: this.restMobile,
+      address: this.restAddress,
+      pincode: this.restPincode,
+      latlong: this.restLatLong,
+      image64:this.restImageBase64,
+      banner64:this.restBannerBase64,
+      openTime:this.restOpenTime,
+      closeTime:this.restCloseTime
+    }
+    this.sharedService.insertData(jsonData)
+    .pipe(take(1)).subscribe({
+      next: result=>{
+        if(result.code == Constant.SUCCESSFUL_STATUS_CODE){
+          this.layout.successSnackBar(result.message);
+          this.closeAnyModal("newRestModal");
+          this.getRestList();
+        }
+        else{
+          this.layout.warningSnackBar(result.message)
+        }
+      },
+      error: _=>{
+        this.layout.errorSnackBar(Constant.returnServerErrorMessage("saveRestaurant"))
+      }
+    })
   }
 
   openAnyModal(modalId:any){

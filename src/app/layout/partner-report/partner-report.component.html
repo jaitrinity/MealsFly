@@ -24,7 +24,7 @@
     </div>
 </div>
 <br>
-<div class="row" *ngIf="searchDataList.length != 0">
+<div class="row">
     <div class="col-md-3">
         <table class="table table-borderd table-striped table-hover my-table">
             <thead>
@@ -46,7 +46,7 @@
         </table>
     </div>
 </div>
-<div class="row" *ngIf="searchDataList.length != 0">
+<div class="row">
     <div class="col-md-12">
         <table class="table table-borderd table-striped table-hover my-table">
             <thead>
@@ -62,6 +62,21 @@
                             <input type="checkbox" id="check-all-Checkbox" (change)="checkAll()" *ngIf="totalPayableAmount !=0"/>
                             Pay Status
                         </label>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="4"></th>
+                    <th colspan="2">
+                        <select class="form-control" [(ngModel)]="searchPaymentStatus" (change)="searchOrder($event)">
+                            <option value="">Pay Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Paid">Paid</option>
+                        </select>
+                    </th>
+                    <th>
+                        <button *ngIf="checkedAmount != 0" class="btn btn-sm btn-danger" (click)="payAmount()" >
+                            <i class="fa fa-inr" aria-hidden="true"></i> {{checkedAmount}}
+                        </button>
                     </th>
                 </tr>
                 <tr *ngIf="false">
@@ -111,7 +126,7 @@
                     </td>
                     <td>
                         <label>
-                            <input type="checkbox" (change)="changePayment(o)" id="order-pay-{{o.orderId}}" 
+                            <input type="checkbox" (change)="changePayment(o)" class="order-pay" id="order-pay-{{o.orderId}}" 
                             *ngIf="o.paymentStatus == 'Pending' && o.status == 5"/>
                             <span [ngClass]="{'text-mealsfly-green' : o.paymentStatus == 'Paid'}">
                                 {{o.paymentStatus}}
@@ -119,14 +134,14 @@
                         </label>
                     </td>
                 </tr>
-                <tr *ngIf="checkedAmount != 0">
+                <!-- <tr *ngIf="checkedAmount != 0">
                     <td colspan="6"></td>
                     <td>
                         <button class="btn btn-sm btn-danger" (click)="payAmount()" >
                             <i class="fa fa-inr" aria-hidden="true"></i> {{checkedAmount}} Pay
                         </button>
                     </td>
-                </tr>
+                </tr> -->
             </tbody>
         </table>
     </div>

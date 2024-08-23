@@ -17,6 +17,7 @@ export class LoginComponent {
   horizontalPosition: MatSnackBarHorizontalPosition = 'right';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   invalid = false;
+  isShow: boolean = false;
   public loginModel: any;
   constructor(private router: Router,
     private sharedService: SharedService, 
@@ -51,8 +52,15 @@ export class LoginComponent {
         if(result.code == Constant.SUCCESSFUL_STATUS_CODE){
           let userInfo = result.userInfo;
           localStorage.setItem("loginEmpName",userInfo.name);
+          localStorage.setItem("loginEmpRoleId",userInfo.roleId);
           localStorage.setItem(btoa("isValidToken"),btoa(Constant.MEALSFLY_PRIVATE_KEY));
-          this.router.navigate(['/layout']);
+          if(userInfo.roleId == "1"){
+            this.router.navigate(['/layout']);
+          }
+          else{
+            this.router.navigate(['/layout/orders']);
+          }
+          
         }
         else{
           this.warningSnackBar(result.message);
