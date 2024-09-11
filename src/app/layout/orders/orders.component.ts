@@ -91,6 +91,7 @@ export class OrdersComponent implements OnInit {
   searchRider: any = "";
   searchPaymentMode: any = "";
   searchGrandTotal: any = "";
+  searchPickup: any = "";
   searchInstruction: any = "";
   searchTotalPrice: any = "";
   searchStatus: any = "";
@@ -109,6 +110,7 @@ export class OrdersComponent implements OnInit {
           riderInfo: any;
           paymentMode: any;
           grandTotal: any,
+          selfPickUp: any,
           statusTxt: any;
           orderDatetime: any;
         }
@@ -122,6 +124,7 @@ export class OrdersComponent implements OnInit {
       x.riderInfo.trim().toLowerCase().includes(this.searchRider.toLowerCase()) && 
       x.paymentMode.trim().toLowerCase().includes(this.searchPaymentMode.toLowerCase()) && 
       x.grandTotal.trim().toLowerCase().includes(this.searchGrandTotal.toLowerCase()) && 
+      x.selfPickUp.trim().toLowerCase().includes(this.searchPickup.toLowerCase()) && 
       x.statusTxt.trim().toLowerCase().includes(this.searchStatus.toLowerCase()) && 
       x.orderDatetime.trim().includes(this.searchDatatime)
     );

@@ -45,13 +45,12 @@
                     <th>Restaurant</th>
                     <th>Customer</th>
                     <th>Primary Mobile</th>
-                    <!-- <th>Rider Name</th>
-                    <th>Rider Mobile</th> -->
                     <th>Rider</th>
                     <th style="width: 130px;">Payment Mode</th>
                     <th style="width: 130px;">Grand Total</th>
+                    <th style="width: 130px;">Self Pickup</th>
                     <th style="width: 150px;">Status</th>
-                    <th>Order Datetime</th>
+                    <th>Order Date</th>
                     <th *ngIf="loginEmpRoleId === '1'"></th>
                 </tr>
                 <tr>
@@ -71,14 +70,6 @@
                         <input type="text" class="form-control" placeholder="Primary Mobile" [(ngModel)]="searchPrimaryMobile"
                         (keyup)="searchOrder($event)"/>
                     </th>
-                    <!-- <th>
-                        <input type="text" class="form-control" placeholder="Rider Name" [(ngModel)]="searchRiderName"
-                        (keyup)="searchOrder($event)"/>
-                    </th>
-                    <th>
-                        <input type="text" class="form-control" placeholder="Rider Mobile" [(ngModel)]="searchRiderMobile"
-                        (keyup)="searchOrder($event)"/>
-                    </th> -->
                     <th>
                         <input type="text" class="form-control" placeholder="Rider" [(ngModel)]="searchRider"
                         (keyup)="searchOrder($event)"/>
@@ -92,11 +83,15 @@
                         (keyup)="searchOrder($event)"/>
                     </th>
                     <th>
+                        <input type="text" class="form-control" placeholder="Self Pickup" [(ngModel)]="searchPickup"
+                        (keyup)="searchOrder($event)"/>
+                    </th>
+                    <th>
                         <input type="text" class="form-control" placeholder="Status" [(ngModel)]="searchStatus"
                         (keyup)="searchOrder($event)"/>
                     </th>
                     <th>
-                        <input type="text" class="form-control" placeholder="Order Datetime" [(ngModel)]="searchDatatime"
+                        <input type="text" class="form-control" placeholder="Order Date" [(ngModel)]="searchDatatime"
                         (keyup)="searchOrder($event)"/>
                     </th>
                     <th *ngIf="loginEmpRoleId === '1'"></th>
@@ -111,13 +106,12 @@
                     <td>{{o.restName}}</td>
                     <td>{{o.custName}}</td>
                     <td>{{o.primaryMobile}}</td>
-                    <!-- <td>{{o.riderName}}</td>
-                    <td>{{o.riderMobile}}</td> -->
                     <td>{{o.riderInfo}}</td>
                     <td>{{o.paymentMode}}</td>
                     <td class="price-align">
                         <i class="fa fa-inr" aria-hidden="true"></i> {{o.grandTotal}}
                     </td>
+                    <td>{{o.selfPickUp}}</td>
                     <td>
                         <span [style.color]="o.statusColor">{{o.statusTxt}}</span>
                     </td>
