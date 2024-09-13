@@ -31,7 +31,9 @@
 
     <div class="col-md-4">
         <label style="display: block;color: transparent;">0</label>
-        <button class="btn btn-sm btn-success" (click)="addRider()">Add Rider</button>
+        <button class="btn btn-sm btn-success bg-mf-green" (click)="addRider()">
+            <i class="fa fa-plus-circle" aria-hidden="true" ></i> Add Rider
+        </button>
     </div>
 </div>
 <br>
@@ -108,7 +110,7 @@
 
 <app-pagination *ngIf="searchRiderList.length !=0" [itemCount]="searchRiderList.length" [perPageRecord]="5" [showPage]="10"></app-pagination>
 
-<div id="imageModal" class="modal fade" role="dialog">
+<div id="imageModal" data-keyboard="false" data-bs-backdrop="static" class="modal fade" role="dialog">
 	<div class="modal-dialog modal-md" >
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 10px !important;">
@@ -133,7 +135,7 @@
 	</div>
 </div>
 
-<div id="editRiderModal" class="modal fade" role="dialog">
+<div id="editRiderModal" data-keyboard="false" data-bs-backdrop="static" class="modal fade" role="dialog">
 	<div class="modal-dialog modal-md" >
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 10px !important;">
@@ -177,7 +179,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label style="display: block;color: transparent;">0</label>
-                        <button class="btn btn-sm btn-success" (click)="saveRider()">Save</button>
+                        <button class="btn btn-sm btn-success bg-mf-green" (click)="saveRider()">Save</button>
                     </div>
                 </div>
 			</div>

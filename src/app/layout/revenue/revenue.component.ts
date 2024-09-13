@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { take } from 'rxjs';
 import { CommonFunction } from 'src/app/shared/CommonFunction';
 import { SharedService } from 'src/app/shared/SharedService';
+import { LayoutComponent } from '../layout.component';
 declare var $: any;
 
 @Component({
@@ -16,7 +17,7 @@ export class RevenueComponent implements OnInit {
   pincodeList: any = [];
   revenueList: any = [];
   subRevenueList: any = [];
-  constructor(private sharedService: SharedService){
+  constructor(private sharedService: SharedService, private layout:LayoutComponent){
 
   }
   ngOnInit(): void {
@@ -39,6 +40,7 @@ export class RevenueComponent implements OnInit {
   }
 
   getRevenueData(){
+    this.layout.spinnerShow();
     let jsonData = {
       searchType: "revenue",
       filterFromDate: this.filterFromDate,
@@ -49,9 +51,11 @@ export class RevenueComponent implements OnInit {
     .pipe(take(1)).subscribe({
       next: result=>{
         this.revenueList = result;
+        this.layout.spinnerHide();
       },
       error: _=>{
         alert("Something wrong in revenue service")
+        this.layout.spinnerHide();
       }
     })
   }

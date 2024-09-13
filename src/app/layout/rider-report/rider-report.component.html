@@ -17,10 +17,12 @@
     
     <div class="col-md-2">
         <label style="display: block;color: transparent;">0</label>
-        <button class="btn btn-sm btn-danger" (click)="getRiderReport()">Filter</button>
+        <button class="btn btn-sm btn-danger" (click)="getRiderReport()">
+            <i class="fa fa-filter" aria-hidden="true"></i> Filter
+        </button>
         &nbsp; 
         <button class="btn btn-sm btn-danger" (click)="exportData()" *ngIf="searchDataList.length != 0">
-            Export
+            <i class="fa fa-download" aria-hidden="true"></i> Export
         </button>
     </div>
 </div>

@@ -60,15 +60,25 @@
 </div>
 
 <div class="row" style="margin-bottom: 2px;">
-    <div class="col-md-8">
+    <div class="col-md-6">
         <span class="text-mealsfly-red" style="font-size: 1.3rem; font-weight: 400; border-bottom: 1px solid;">Item List</span>
     </div>
-    <div class="col-md-4" style="text-align: right;">
-        <button class="btn btn-sm btn-info text-white" (click)="addCatItem()">Add Item</button>
+    <div class="col-md-6" style="text-align: right;">
+        <button class="btn btn-sm btn-info text-white" *ngIf="false" (click)="importItem()">
+            <i class="fa fa-upload" aria-hidden="true"></i> Upload Item
+        </button>
+        &nbsp;
+        <button class="btn btn-sm btn-info text-white" (click)="addNewCategory(0)">
+            <i class="fa fa-plus-circle" aria-hidden="true" ></i> Add Category
+        </button>
+        &nbsp;
+        <button class="btn btn-sm btn-info text-white" (click)="addCatItem()">
+            <i class="fa fa-plus-circle" aria-hidden="true" ></i> Add Item
+        </button>
         &nbsp; 
         <button class="btn btn-sm btn-danger" (click)="exportItem()" 
             *ngIf="searchItemList.length != 0">
-            Export Item
+            <i class="fa fa-download" aria-hidden="true"></i> Export Item
         </button>
     </div>
 </div>
@@ -78,9 +88,9 @@
         <table class="table table-borderd table-striped my-table">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th style="width: 500px;">Name</th>
                     <th>Category</th>
-                    <th>Enable/Disable</th>
+                    <th style="width: 150px;">Enable/Disable</th>
                     <th>Unit</th>
                     <th></th>
                 </tr>
@@ -152,7 +162,7 @@
     </div>
 </div>
 
-<div id="editItemModal" class="modal fade" role="dialog">
+<div id="editItemModal" data-keyboard="false" data-bs-backdrop="static" class="modal fade" role="dialog">
 	<div class="modal-dialog modal-md" >
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 10px !important;">
@@ -206,7 +216,7 @@
                     </div>
                     <div class="col-md-12">
                         <label style="display: block;color: transparent;">0</label>
-                        <button class="btn btn-sm btn-success" (click)="saveItem()">Save</button>
+                        <button class="btn btn-sm btn-success bg-mf-green" (click)="saveItem()">Save</button>
                     </div>
                 </div>
 			</div>
@@ -216,7 +226,7 @@
 	</div>
 </div>
 
-<div id="editRestModal" class="modal fade" role="dialog">
+<div id="editRestModal" data-keyboard="false" data-bs-backdrop="static" class="modal fade" role="dialog">
 	<div class="modal-dialog modal-md" >
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 10px !important;">
@@ -277,7 +287,7 @@
                 <div class="row">
                     <div class="col-md-2">
                         <label style="display: block;color: transparent;">0</label>
-                        <button class="btn btn-sm btn-info text-white" (click)="saveRestaurant()">Save</button>
+                        <button class="btn btn-sm btn-success bg-mf-green" (click)="saveRestaurant()">Save</button>
                     </div>
                 </div>
 			</div>
@@ -287,7 +297,7 @@
 	</div>
 </div>
 
-<div id="imageModal" class="modal fade" role="dialog">
+<div id="imageModal" data-keyboard="false" data-bs-backdrop="static" class="modal fade" role="dialog">
 	<div class="modal-dialog modal-md" >
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 10px !important;">
@@ -312,7 +322,41 @@
 	</div>
 </div>
 
-<div id="addItemModal" class="modal fade" role="dialog">
+<div id="importItemModal" data-keyboard="false" data-bs-backdrop="static" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-md" >
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 10px !important;">
+				<h5 class="modal-title"></h5>
+				<button class="btn btn-sm btn-danger" (click)="closeAnyModal('importItemModal')">Close</button>
+			</div>
+			<div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Select excel file <span>*</span></label>
+                        <input type="file" (change)="addfile($event)" id="locationFile" class="form-control" 
+                        placeholder="Upload file" accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label style="color: transparent;display: block">0</label>
+                        <button class="btn btn-sm btn-success bg-mf-green" (click)="uploadItemData()">
+                            <i class="fa fa-upload" aria-hidden="true"></i> Upload
+                        </button>
+                        &nbsp;
+                        <button class="btn btn-sm btn-danger" (click)="downloadFormat()">
+                            <i class="fa fa-download" aria-hidden="true"></i> Download Format
+                        </button>
+                    </div>
+                </div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>	
+	</div>
+</div>
+
+<div id="addItemModal" data-keyboard="false" data-bs-backdrop="static" class="modal fade" role="dialog">
 	<div class="modal-dialog modal-xl" >
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 10px !important;">
@@ -326,9 +370,10 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
-                        <Label>Category</Label> 
-                        &nbsp;<i class="fa fa-plus-circle" aria-hidden="true" (click)="addNewCategory()" title="Add new category"></i>
+                    <div class="col-md-12" style="margin: 5px 0px;">
+                        <button class="btn btn-sm btn-info text-white" (click)="addNewCategory(1)">
+                            <i class="fa fa-plus-circle" aria-hidden="true" ></i> Add Category
+                        </button>
                     </div>
                 </div>
                 <div class="row">
@@ -388,7 +433,7 @@
                     </div>
                     <div class="col-md-3">
                         <label style="display: block;color: transparent;">0</label>
-                        <button class="btn btn-sm btn-success" (click)="submitItem()">Submit</button>
+                        <button class="btn btn-sm btn-success bg-mf-green" (click)="submitItem()">Submit</button>
                     </div>
                 </div>
 			</div>
@@ -398,12 +443,13 @@
 	</div>
 </div>
 
-<div id="newCategoryModal" class="modal fade" role="dialog">
+<div id="newCategoryModal" data-keyboard="false" data-bs-backdrop="static" class="modal fade" role="dialog">
 	<div class="modal-dialog modal-md" >
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 10px !important;">
 				<h5 class="modal-title"></h5>
 				<button class="btn btn-sm btn-danger" (click)="closeAndOpenModal('newCategoryModal','addItemModal')">Cancel</button>
+				<!-- <button class="btn btn-sm btn-danger" (click)="closeAnyModal('newCategoryModal')">Cancel</button> -->
 			</div>
 			<div class="modal-body">
                 <div class="row">
@@ -412,14 +458,22 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
-                        <label>Category *</label>
-                        <input type="text" class="form-control resetField" [(ngModel)]="newCatName"/>
+                    <div class="col-md-6">
+                        <label>New Category *</label>
+                        <!-- <input type="text" class="form-control" [(ngModel)]="newCatName" [disabled]="oldCatName !=''"/> -->
+                        <input type="text" class="form-control" [(ngModel)]="newCatName"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Old Category * <i (click)="oldCatName=''" class="fa fa-refresh" aria-hidden="true"></i></label>
+                        <select class="form-control" [(ngModel)]="oldCatName" (change)="newCatName = oldCatName">
+                            <option value="">Select</option>
+                            <option *ngFor="let cat of categoryList" [value]="cat.catName">{{cat.catName}}</option>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label>Image *</label>
+                        <label>Image</label>
                         <input type="file" id="file_catImage" accept=".jpg,.jpeg,.png" (change)="changeListener($event,'catImage')" class="form-control resetField" />
                         <input type="hidden" [(ngModel)]="catImageBase64" class="form-control resetField"/>
                     </div>
@@ -427,7 +481,12 @@
                 <div class="row">
                     <div class="col-md-12">
                         <label style="display: block;color: transparent;">0</label>
-                        <button class="btn btn-sm btn-success" (click)="submitCategory()">Submit</button>
+                        <button class="btn btn-sm btn-success bg-mf-green" (click)="submitCategory()">Submit</button>
+                        &nbsp; 
+                        <button class="btn btn-sm btn-danger" (click)="exportCategory()" 
+                            *ngIf="categoryList.length != 0">
+                            <i class="fa fa-download" aria-hidden="true"></i> Export Category
+                        </button>
                     </div>
                 </div>
 			</div>

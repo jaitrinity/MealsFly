@@ -6,6 +6,7 @@ import { LayoutComponent } from '../layout.component';
 import { Constant } from 'src/app/constant/Constant';
 import { PaginationComponent } from 'src/app/pagination/pagination.component';
 import { CommonFunction } from 'src/app/shared/CommonFunction';
+import * as XLSX from 'xlsx';
 declare var $: any;
 
 @Component({
@@ -613,35 +614,45 @@ export class CommonPageComponent implements OnInit {
   }
 
   
-
-  addNewCategory(){
+  typeId: any;
+  addNewCategory(typeId:any){
+    this.typeId = typeId;
     this.closeAnyModal("addItemModal");
     this.openAnyModal("newCategoryModal");
   }
 
   newCatName:any = "";
+  oldCatName:any = "";
   submitCategory(){
     if(this.newCatName.trim() == ""){
       this.layout.warningSnackBar("Please enter category name");
       return;
     }
-    else if(this.catImageBase64 == ""){
-      this.layout.warningSnackBar("Please select category image");
-      return;
-    }
+    // else if(this.catImageBase64 == ""){
+    //   this.layout.warningSnackBar("Please select category image");
+    //   return;
+    // }
     let jsonData ={
-      insertType: "addCategory",
+      insertType: "addCategoryNew",
       restId: this.restId,
       category: this.newCatName,
+      oldCategory: this.oldCatName,
       imageBase64: this.catImageBase64
     }
     this.sharedService.insertData(jsonData)
     .pipe(take(1)).subscribe({
       next: result=>{
         if(result.code == Constant.SUCCESSFUL_STATUS_CODE){
+          this.newCatName = "";
+          this.oldCatName = "";
+          this.catImageBase64 = "";
           $(".resetField").val("");
           this.getAllCategory();
-          this.closeAndOpenModal('newCategoryModal','addItemModal');
+          // this.closeAndOpenModal('newCategoryModal','addItemModal');
+          this.layout.successSnackBar(result.message);
+        }
+        else{
+          this.layout.warningSnackBar(result.message);
         }
       },
       error: _=>{
@@ -710,6 +721,30 @@ export class CommonPageComponent implements OnInit {
     }
   }
 
+  exportCategory(){
+    if(this.categoryList.length != 0 ){
+
+      let tempCatList = [];
+      for(let i=1;i<this.categoryList.length;i++){
+        let catObj = this.categoryList[i];
+        let tempJson = {
+          sr:i,
+          catName: catObj.catName
+        } 
+        tempCatList.push(tempJson);
+      }
+      let columnKeyArr:any = ['sr',"catName"];
+      let columnTitleArr:any = ["SR","Category"];
+      CommonFunction.downloadFile(tempCatList,
+        'Category.csv', 
+        columnKeyArr, 
+        columnTitleArr)
+    }
+    else{
+      alert("No data for export");
+    }
+  }
+
   checkCloseTime():any{
     let openTime:any = new Date("2023-11-17 "+this.restOpenTime);
     let closeTime:any = new Date("2023-11-17 "+this.restCloseTime);
@@ -720,6 +755,67 @@ export class CommonPageComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  importItem(){
+    this.openAnyModal("importItemModal");
+  }
+
+  downloadFormat(){
+    let link = Constant.phpServiceURL+"/Format/ImportItem.xlsx";
+    window.open(link);
+  }
+
+  arrayBuffer:any;
+  importData = [];
+  addfile(event:any)     
+  {    
+    let file= event.target.files[0];     
+    let fileReader = new FileReader();    
+    fileReader.readAsArrayBuffer(file);     
+    fileReader.onload = (e) => {    
+        this.arrayBuffer = fileReader.result;    
+        var data = new Uint8Array(this.arrayBuffer);    
+        var arr = new Array();    
+        for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);    
+        var bstr = arr.join("");    
+        var workbook = XLSX.read(bstr, {type:"binary"});    
+        var first_sheet_name = workbook.SheetNames[0];    
+        var worksheet = workbook.Sheets[first_sheet_name];
+        this.importData = XLSX.utils.sheet_to_json(worksheet,{raw:false,dateNF: "yyyy-MM-dd"});      
+    }    
+  }
+
+  uploadItemData(){
+    if(this.importData.length == 0){
+      this.layout.warningSnackBar("please select file first");
+      return ;
+    }
+    
+    let jsonData = {
+      insertType: "importItem",
+      restId: this.restId,
+      importData: this.importData
+    }
+    // console.log(JSON.stringify(jsonData))
+    this.sharedService.insertData(jsonData)
+    .pipe(take(1)).subscribe({
+      next: result=>{
+        if(result.code == Constant.SUCCESSFUL_STATUS_CODE){
+          this.closeAnyModal('importItemModal');
+          this.importData = [];
+          $("#locationFile").val("");
+          this.resetItemList();
+          this.layout.successSnackBar(result.message);
+        }
+        else{
+          this.layout.warningSnackBar(result.message);
+        }
+      },
+      error: _=>{
+        this.layout.errorSnackBar(Constant.returnServerErrorMessage("importItem"))
+      }
+    })
   }
 
   openAnyModal(modalId:any){
@@ -735,6 +831,8 @@ export class CommonPageComponent implements OnInit {
   }
   closeAndOpenModal(closeModalId:any, openModalId:any){ 
     this.closeAnyModal(closeModalId);
-    this.openAnyModal(openModalId);
+    if(this.typeId == 1){
+      this.openAnyModal(openModalId);
+    }
   }
 }

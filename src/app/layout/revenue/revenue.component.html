@@ -17,10 +17,12 @@
 
     <div class="col-md-4">
         <label style="display: block;color: transparent;">0</label>
-        <!-- <button class="btn btn-sm btn-danger" (click)="getRevenueData()">Filter</button>
+        <!-- <button class="btn btn-sm btn-danger" (click)="getRevenueData()">
+            <i class="fa fa-filter" aria-hidden="true"></i> Filter
+        </button>
         &nbsp;  -->
         <button class="btn btn-sm btn-danger" (click)="exportRevenueData()" *ngIf="revenueList.length != 0">
-            Export
+            <i class="fa fa-download" aria-hidden="true"></i> Export
         </button>
     </div>
 </div>
@@ -41,7 +43,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let r of revenueList">
+                <tr *ngFor="let r of revenueList" (click)="getSubRevenueList(r)" style="cursor: pointer;">
                     <td>{{r.OrderDate}}</td>
                     <td>{{r.Pincode}}</td>
                     <td>{{r.NoOfOrder}}</td>

@@ -6,16 +6,14 @@
             <option *ngFor="let rp of restPincodeList" [value]="rp">{{rp}}</option>
         </select>
     </div> -->
-    <div class="col-md-3">
+    <div class="col-md-12">
         <label style="display: block;color: transparent;">0</label>
-        <button class="btn btn-sm btn-danger" (click)="openAnyModal('newRestModal')">
-            New Restaurant
+        <button class="btn btn-sm btn-info text-white" (click)="openAnyModal('newRestModal')">
+            <i class="fa fa-plus-circle" aria-hidden="true" ></i> New Restaurant
         </button>
-    </div>
-    <div class="col-md-4">
-        <label style="display: block;color: transparent;">0</label>
+        &nbsp;
         <button class="btn btn-sm btn-danger" (click)="exportRestaurant()" *ngIf="searchRestList.length != 0">
-            Export
+            <i class="fa fa-download" aria-hidden="true"></i> Export
         </button>
     </div>
 </div>
@@ -115,11 +113,11 @@
 </div>
 <app-pagination *ngIf="searchRestList.length !=0" 
     [itemCount]="searchRestList.length" 
-    [perPageRecord]="10" 
+    [perPageRecord]="20" 
     [showPage]="10">
 </app-pagination>
 
-<div id="imageModal" class="modal fade" role="dialog">
+<div id="imageModal" data-keyboard="false" data-bs-backdrop="static" class="modal fade" role="dialog">
 	<div class="modal-dialog modal-md" >
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 10px !important;">
@@ -144,7 +142,7 @@
 	</div>
 </div>
 
-<div id="newRestModal" class="modal fade" role="dialog">
+<div id="newRestModal" data-keyboard="false" data-bs-backdrop="static" class="modal fade" role="dialog">
 	<div class="modal-dialog modal-md" >
 		<div class="modal-content">
 			<div class="modal-header" style="padding: 10px !important;">
@@ -205,7 +203,7 @@
                 <div class="row">
                     <div class="col-md-2">
                         <label style="display: block;color: transparent;">0</label>
-                        <button class="btn btn-sm btn-info text-white" (click)="saveRestaurant()">Save</button>
+                        <button class="btn btn-sm btn-success bg-mf-green" (click)="saveRestaurant()">Save</button>
                     </div>
                 </div>
 			</div>

@@ -9,10 +9,12 @@
     </div>
     <div class="col-md-4">
         <label style="display: block;color: transparent;">0</label>
-        <button class="btn btn-sm btn-danger" (click)="getOrders()">Filter</button>
+        <button class="btn btn-sm btn-danger" (click)="getOrders()">
+            <i class="fa fa-filter" aria-hidden="true"></i> Filter
+        </button>
         &nbsp; 
         <button class="btn btn-sm btn-danger" (click)="exportOrder()" *ngIf="searchOrderList.length != 0">
-            Export
+            <i class="fa fa-download" aria-hidden="true"></i> Export
         </button>
     </div>
 </div>
@@ -285,7 +287,7 @@
                     </tbody>
                 </table>
                 <div style="text-align: right;">
-                    <button *ngIf="editCount != 0" class="btn btn-sm btn-info text-white" (click)="editOrderItem()">Save</button>
+                    <button *ngIf="editCount != 0" class="btn btn-sm btn-success bg-mf-green" (click)="editOrderItem()">Save</button>
                     <button *ngIf="deleteItemArr.length != 0" class="btn btn-sm btn-danger text-white" (click)="deleteOrderItem()">Delete</button>
                 </div>
                     
