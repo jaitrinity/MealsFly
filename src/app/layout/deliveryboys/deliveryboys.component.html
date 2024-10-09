@@ -29,7 +29,12 @@
         <input type="hidden" [(ngModel)]="panBase64"/>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
+        <label>Lat-Long *</label>
+        <input type="text" [(ngModel)]="latLong" class="form-control" placeholder="Enter current rider location Lat-Long"/>
+    </div>
+
+    <div class="col-md-3">
         <label style="display: block;color: transparent;">0</label>
         <button class="btn btn-sm btn-success bg-mf-green" (click)="addRider()">
             <i class="fa fa-plus-circle" aria-hidden="true" ></i> Add Rider
@@ -174,6 +179,12 @@
                         <label>PAN Pic</label>
                         <input type="file" (change)="changeListener($event, '3')" id="file_editPanBase64" accept=".jpg,.jpeg,.png" class="form-control" />
                         <input type="hidden" [(ngModel)]="editPanBase64"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Lat-Long *</label>
+                        <input type="text" class="form-control" [(ngModel)]="editRiderLatLong" placeholder="Enter current rider location Lat-Long"/>
                     </div>
                 </div>
                 <div class="row">

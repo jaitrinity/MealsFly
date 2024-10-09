@@ -19,6 +19,7 @@ export class DeliveryboysComponent implements OnInit {
   aadharBase64: any = "";
   panNo: string = "";
   panBase64: any = "";
+  latLong: any = "";
   riderId: any = "";
 
   editName: string = "";
@@ -27,6 +28,7 @@ export class DeliveryboysComponent implements OnInit {
   editAadharBase64: any = "";
   editPanBase64: any = "";
   editPanNo: any = "";
+  editRiderLatLong: any = "";
   riderList: any = [];
   searchRiderList : any = [];
   constructor(private sharedService: SharedService, private layout: LayoutComponent){
@@ -182,6 +184,10 @@ export class DeliveryboysComponent implements OnInit {
       this.layout.warningSnackBar("select pan file");
       return
     }
+    else if(this.latLong == ""){
+      this.layout.warningSnackBar("enter current rider location Lat-Long");
+      return
+    }
     this.layout.spinnerShow();
     let jsonData = {
       insertType: "addRider",
@@ -190,7 +196,8 @@ export class DeliveryboysComponent implements OnInit {
       aadharNo: this.aadharNo,
       aadharBase64: this.aadharBase64,
       panNo: this.panNo,
-      panBase64: this.panBase64
+      panBase64: this.panBase64,
+      latLong: this.latLong
     }
     this.sharedService.insertData(jsonData)
     .pipe(take(1)).subscribe({
@@ -217,6 +224,7 @@ export class DeliveryboysComponent implements OnInit {
     this.editMobile = riderObj.mobile;
     this.editAadharNo = riderObj.aadharNo;
     this.editPanNo = riderObj.panNo;
+    this.editRiderLatLong = riderObj.riderLatLong;
     this.openAnyModal("editRiderModal");
   }
 
@@ -243,16 +251,20 @@ export class DeliveryboysComponent implements OnInit {
       this.layout.warningSnackBar("aadhar No length should be equal to 12")
       return;
     }
-    else if(this.editAadharNo != "" && this.editAadharBase64 == ""){
-      this.layout.warningSnackBar("Select aadhar file");
-      return;
-    }
+    // else if(this.editAadharNo != "" && this.editAadharBase64 == ""){
+    //   this.layout.warningSnackBar("Select aadhar file");
+    //   return;
+    // }
     else if(this.editPanNo.trim() != "" && this.editPanNo.trim().length != 10){
       this.layout.warningSnackBar("PAN no lenght should be equal to 10")
       return;
     }
-    else if(this.editPanNo != "" && this.editPanBase64 == ""){
-      this.layout.warningSnackBar("select pan file");
+    // else if(this.editPanNo != "" && this.editPanBase64 == ""){
+    //   this.layout.warningSnackBar("select pan file");
+    //   return
+    // }
+    else if(this.editRiderLatLong == ""){
+      this.layout.warningSnackBar("enter enter current rider location Lat-Long");
       return
     }
     let jsonData = {
@@ -263,7 +275,8 @@ export class DeliveryboysComponent implements OnInit {
       aadharNo: this.editAadharNo,
       aadharBase64: this.editAadharBase64,
       panNo: this.editPanNo,
-      panBase64: this.editPanBase64
+      panBase64: this.editPanBase64,
+      riderLatLong: this.editRiderLatLong
     }
     this.layout.spinnerShow();
     this.sharedService.updateData(jsonData)
