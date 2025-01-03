@@ -286,7 +286,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <div style="text-align: right;">
+                <div style="text-align: right;" *ngIf="viewOrderObj.status !=5">
                     <button *ngIf="editCount != 0" class="btn btn-sm btn-success bg-mf-green" (click)="editOrderItem()">Save</button>
                     <button *ngIf="deleteItemArr.length != 0" class="btn btn-sm btn-danger text-white" (click)="deleteOrderItem()">Delete</button>
                 </div>

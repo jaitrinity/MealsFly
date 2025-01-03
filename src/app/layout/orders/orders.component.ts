@@ -15,6 +15,7 @@ declare var $: any;
 export class OrdersComponent implements OnInit {
   @ViewChild(PaginationComponent) myPagination: any;
   loginEmpRoleId: any = "";
+  loginUserId: any = "";
   filterStartDate: any = "";
   filterEndDate: any = ""
   orderList: any = [];
@@ -24,6 +25,7 @@ export class OrdersComponent implements OnInit {
   orderItemList: any = [];
   constructor(private sharedService: SharedService,private layout:LayoutComponent){
     layout.setPageTitle("Order");
+    this.loginUserId = localStorage.getItem("loginUserId");
     this.loginEmpRoleId = localStorage.getItem("loginEmpRoleId");
   }
   ngOnInit(): void {
@@ -153,6 +155,7 @@ export class OrdersComponent implements OnInit {
     }
     let jsonData = {
       updateType:"deleteOrder",
+      loginUserId:this.loginUserId,
       orderId: orderId
     }
     this.sharedService.updateData(jsonData)
@@ -271,6 +274,7 @@ export class OrdersComponent implements OnInit {
     }
     let jsonData = {
       updateType: 'deleteOrderItem',
+      loginUserId: this.loginUserId,
       orderId: this.viewOrderId,
       deleteItemPrice: this.deleteItemPrice,
       deleteItemArr: this.deleteItemArr

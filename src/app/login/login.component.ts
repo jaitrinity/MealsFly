@@ -51,16 +51,19 @@ export class LoginComponent {
       next: result=>{
         if(result.code == Constant.SUCCESSFUL_STATUS_CODE){
           let userInfo = result.userInfo;
+          localStorage.setItem("loginUserId",userInfo.userId);
           localStorage.setItem("loginEmpName",userInfo.name);
           localStorage.setItem("loginEmpRoleId",userInfo.roleId);
           localStorage.setItem(btoa("isValidToken"),btoa(Constant.MEALSFLY_PRIVATE_KEY));
-          if(userInfo.roleId == "1"){
-            this.router.navigate(['/layout']);
-          }
-          else{
+          if(userInfo.roleId == "2"){
             this.router.navigate(['/layout/orders']);
           }
-          
+          else if(userInfo.roleId == "3"){
+            this.router.navigate(['/layout/allRestaurant']);
+          }
+          else{
+            this.router.navigate(['/layout']);
+          }
         }
         else{
           this.warningSnackBar(result.message);
